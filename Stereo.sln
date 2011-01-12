@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stereo", "Stereo.csproj", "{E6AC1241-3443-4686-87CA-67C10B9A9059}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content", "Content\Content.contentproj", "{3958CFF9-9271-4002-84DC-EDA2452FA471}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentLibrary", "WindowsGameLibrary\ContentLibrary.csproj", "{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6AC1241-3443-4686-87CA-67C10B9A9059}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E6AC1241-3443-4686-87CA-67C10B9A9059}.Debug|x86.ActiveCfg = Debug|x86
+		{E6AC1241-3443-4686-87CA-67C10B9A9059}.Debug|x86.Build.0 = Debug|x86
+		{E6AC1241-3443-4686-87CA-67C10B9A9059}.Release|Any CPU.ActiveCfg = Release|x86
+		{E6AC1241-3443-4686-87CA-67C10B9A9059}.Release|x86.ActiveCfg = Release|x86
+		{E6AC1241-3443-4686-87CA-67C10B9A9059}.Release|x86.Build.0 = Release|x86
+		{3958CFF9-9271-4002-84DC-EDA2452FA471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3958CFF9-9271-4002-84DC-EDA2452FA471}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3958CFF9-9271-4002-84DC-EDA2452FA471}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{3958CFF9-9271-4002-84DC-EDA2452FA471}.Release|x86.ActiveCfg = Debug|Any CPU
+		{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}.Debug|x86.ActiveCfg = Debug|x86
+		{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}.Debug|x86.Build.0 = Debug|x86
+		{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}.Release|Any CPU.ActiveCfg = Release|x86
+		{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}.Release|x86.ActiveCfg = Release|x86
+		{CF7EA9F1-EBAE-4AC7-813C-26D6D37B54BF}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
