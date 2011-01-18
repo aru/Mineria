@@ -28,12 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.menu1 = new Stereo.Menu();
+            this.SuspendLayout();
+            // 
+            // menu1
+            // 
+            this.menu1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.menu1.Location = new System.Drawing.Point(0, 0);
+            this.menu1.Name = "menu1";
+            this.menu1.Size = new System.Drawing.Size(284, 262);
+            this.menu1.TabIndex = 0;
+            this.menu1.Text = "menu1";
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ControlBox = false;
+            this.Controls.Add(this.menu1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "Form1";
             this.Text = "Form1";
+            this.TopMost = true;
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private Menu menu1;
     }
 }
 
