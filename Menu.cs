@@ -31,6 +31,11 @@ namespace Stereo
         TimeSpan accumulatedTime;
         TimeSpan lastTime;
 
+        // We use matrixes to move the primitives around
+        Matrix translation = Matrix.Identity;
+        Matrix rotation = Matrix.Identity;
+        Matrix scale = Matrix.Identity;
+
         void Tick(object sender, EventArgs e)
         {
             TimeSpan currentTime = stopWatch.Elapsed;
@@ -90,9 +95,10 @@ namespace Stereo
             //font = content.Load<SpriteFont>("hudFont"); font doesn't exist yet
 
             // Load the primitives
-            primitives.Add(new CubePrimitive(GraphicsDevice));
             primitives.Add(new SpherePrimitive(GraphicsDevice));
+            primitives.Add(new CubePrimitive(GraphicsDevice));
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
+            primitives.Add(new SpherePrimitive(GraphicsDevice));
 
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
@@ -106,7 +112,7 @@ namespace Stereo
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // Spin the triangle according to how much time has passed.
+            // Spin the primitives according to how much time has passed.
             float time = (float)stopWatch.Elapsed.TotalSeconds;
 
             float yaw = time * 0.7f;
@@ -120,7 +126,10 @@ namespace Stereo
             // Set transform matrices.
             float aspect = GraphicsDevice.Viewport.AspectRatio;
 
-            effect.World = Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
+            // end of my stuff
+
+            effect.World = Matrix.CreateTranslation( 0.0f, 0.0f, 0.0f );
+            effect.World *= Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
 
             effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5),
                                               Vector3.Zero, Vector3.Up);
@@ -142,7 +151,30 @@ namespace Stereo
                 effect.GraphicsDevice.BlendState = BlendState.Opaque;
             }
 
-            currentPrimitive.Draw(effect);
+            Vector2 screenCenter = new Vector2(0.0f, 0.0f);
+            Vector2 primCenter = new Vector2( 0.0f, 0.0f );
+            float size = 1.0f;
+
+            foreach (GeometricPrimitive primitive in primitives)
+	        {
+
+                //if (primCenter.X + screenCenter.X < GraphicsDevice.Viewport.Width)
+                    primCenter.X += screenCenter.X;
+                //else if (primCenter.Y + screenCenter.Y < GraphicsDevice.Viewport.Height)
+                    primCenter.Y += screenCenter.Y;
+
+                // Divide screen by number of primitives / 2 in x, and by 2 in y to get rows and columns
+                screenCenter = new Vector2( GraphicsDevice.Viewport.Width / ( primitives.Count / 2 ), 
+                    GraphicsDevice.Viewport.Height / 2 );
+
+                // Divide this number by 2 to get the center and size of the prim
+                primCenter = screenCenter / 2;
+                size = primCenter.X;
+
+                //effect.World = Matrix.CreateTranslation(primCenter.X, primCenter.Y, 0.0f);
+
+		        primitive.Draw( effect );
+	        }
 
         }
     }

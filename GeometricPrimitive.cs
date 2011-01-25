@@ -41,7 +41,6 @@ namespace Stereo
         IndexBuffer indexBuffer;
         BasicEffect basicEffect;
 
-
         #endregion
 
         #region Initialization
