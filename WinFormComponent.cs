@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 
 namespace Stereo
 {
-    class WinFormComponent : IGameComponent, IUpdateable
+    public class WinFormComponent : IGameComponent, IUpdateable
     {
-        public void Initialize()
+        public virtual void Initialize()
         {
-            throw new NotImplementedException();
+            
         }
 
         public bool Enabled
@@ -18,9 +19,14 @@ namespace Stereo
 
         public event EventHandler<EventArgs> EnabledChanged;
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            
+        }
+
+        public virtual void Update(Stopwatch stopwatch)
+        {
+
         }
 
         public int UpdateOrder

@@ -36,6 +36,8 @@ namespace Stereo
         Matrix rotation = Matrix.Identity;
         Matrix scale = Matrix.Identity;
 
+        Camera camera;
+
         void Tick(object sender, EventArgs e)
         {
             TimeSpan currentTime = stopWatch.Elapsed;
@@ -100,6 +102,9 @@ namespace Stereo
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
             primitives.Add(new SpherePrimitive(GraphicsDevice));
 
+            camera = new Camera(GraphicsDevice, new Vector3(0, 0, 5),
+                Vector3.Zero, Vector3.Up);
+
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
         }
@@ -131,10 +136,12 @@ namespace Stereo
             effect.World = Matrix.CreateTranslation( 0.0f, 0.0f, 0.0f );
             effect.World *= Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
 
-            effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5),
-                                              Vector3.Zero, Vector3.Up);
+            effect.View = camera.view;
+            effect.Projection = camera.projection;
+            //effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5),
+            //                                  Vector3.Zero, Vector3.Up);
 
-            effect.Projection = Matrix.CreatePerspectiveFieldOfView(1, aspect, 1, 10);
+            //effect.Projection = Matrix.CreatePerspectiveFieldOfView(1, aspect, 1, 10);
 
             effect.DiffuseColor = color.ToVector3();
             effect.Alpha = color.A / 255.0f;
