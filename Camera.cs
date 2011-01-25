@@ -15,13 +15,12 @@ namespace Stereo
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Camera : Microsoft.Xna.Framework.GameComponent
+    public class Camera : WinFormComponent
     {
         public Matrix view { get; protected set; }
         public Matrix projection { get; protected set; }
 
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
-            : base(game)
+        public Camera( GraphicsDevice graphicsDevice, Vector3 pos, Vector3 target, Vector3 up)
         {
             // Initialize view matrix
             view = Matrix.CreateLookAt(pos, target, up);
@@ -29,8 +28,10 @@ namespace Stereo
             // Initialize projection matrix
             projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4,
-                (float)Game.Window.ClientBounds.Width /
-                (float)Game.Window.ClientBounds.Height,
+                (float)graphicsDevice.Viewport.Width /
+                (float)graphicsDevice.Viewport.Height,
+                //(float)Game.Window.ClientBounds.Width /
+                //(float)Game.Window.ClientBounds.Height,
                 1, 100);
         }
 
