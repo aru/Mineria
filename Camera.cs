@@ -26,6 +26,8 @@ namespace Stereo
         public Vector3 cameraPosition { get; protected set; }
         Vector3 cameraDirection;
         Vector3 cameraUp;
+        GraphicsDevice graphicsDevice;
+        Stopwatch stopwatch;
 
         // Speed
         float speed = 3;
@@ -33,10 +35,14 @@ namespace Stereo
         // Mouse stuff
         MouseState prevMouseState;
 
-        public Camera( GraphicsDevice graphicsDevice, Vector3 pos, Vector3 target, Vector3 up)
+        public Camera( GraphicsDevice graphicsDevice, Stopwatch stopwatch, Vector3 pos, Vector3 target, Vector3 up )
         {
             /*// Initialize view matrix
             view = Matrix.CreateLookAt(pos, target, up);*/
+
+            // assign a reference to GraphicsDevice
+            this.graphicsDevice = graphicsDevice;
+            this.stopwatch = stopwatch;
 
             // Build camera view matrix
             cameraPosition = pos;
@@ -55,6 +61,12 @@ namespace Stereo
                 1, 100);
         }
 
+        private void CreateLookAt()
+        {
+            view = Matrix.CreateLookAt(cameraPosition,
+                cameraPosition + cameraDirection, cameraUp);
+        }
+
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
@@ -62,11 +74,11 @@ namespace Stereo
         public override void Initialize()
         {
             // Set mouse position and do initial get state
-            Mouse.SetPosition((float)graphicsDevice.Viewport.Width / 2,
-            (float)graphicsDevice.Viewport.Height / 2);
+            Mouse.SetPosition((int)graphicsDevice.Viewport.Width / 2,
+            (int)graphicsDevice.Viewport.Height / 2);
             prevMouseState = Mouse.GetState();
 
-            base.Initialize();
+            //base.Initialize();
         }
 
         /// <summary>
@@ -122,7 +134,7 @@ namespace Stereo
             // Recreate the camera view matrix
             CreateLookAt();
 
-            base.Update(stopwatch);
+            //base.Update(stopwatch);
         }
     }
 }

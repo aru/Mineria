@@ -102,7 +102,7 @@ namespace Stereo
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
             primitives.Add(new SpherePrimitive(GraphicsDevice));
 
-            camera = new Camera(GraphicsDevice, new Vector3(0, 0, 5),
+            camera = new Camera(GraphicsDevice, stopWatch, new Vector3(0, 0, 5),
                 Vector3.Zero, Vector3.Up);
 
             // Hook the idle event to constantly redraw our animation.
@@ -161,6 +161,8 @@ namespace Stereo
             Vector2 screenCenter = new Vector2(0.0f, 0.0f);
             Vector2 primCenter = new Vector2( 0.0f, 0.0f );
             float size = 1.0f;
+
+            camera.Update( stopWatch );
 
             foreach (GeometricPrimitive primitive in primitives)
 	        {
