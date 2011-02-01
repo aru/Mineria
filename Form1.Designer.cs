@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menu1 = new Stereo.Menu();
+            this.menu1 = new Stereo.StereoControl();
             this.SuspendLayout();
             // 
             // menu1
@@ -45,9 +45,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 480);
-            this.ControlBox = false;
             this.Controls.Add(this.menu1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "Form1";
             this.Text = "Form1";
             this.TopMost = true;
@@ -57,7 +56,7 @@
 
         #endregion
 
-        private Menu menu1;
+        private StereoControl menu1;
     }
 }
 

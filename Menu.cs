@@ -9,13 +9,16 @@ using System.Runtime.InteropServices;
 
 namespace Stereo
 {
-    class Menu : GraphicsDeviceControl
+    class StereoControl : GraphicsDeviceControl
     {
         BasicEffect effect;
 
         ContentManager content;
         SpriteBatch spriteBatch;
         SpriteFont font;
+
+        // Collection for game components
+        GameComponentCollection Components;
 
         // Store a list of primitive models, plus which one is currently selected.
         List<GeometricPrimitive> primitives = new List<GeometricPrimitive>();
@@ -36,7 +39,7 @@ namespace Stereo
         Matrix rotation = Matrix.Identity;
         Matrix scale = Matrix.Identity;
 
-        Camera camera;
+        FreeCamera camera;
 
         void Tick(object sender, EventArgs e)
         {
@@ -83,6 +86,13 @@ namespace Stereo
         /// </summary>
         protected override void Initialize()
         {
+            // Initialize Component Collection
+            Components = new GameComponentCollection();
+
+            // BackBuffer size and stuff
+            GraphicsDevice.PresentationParameters.BackBufferHeight = 480;
+            GraphicsDevice.PresentationParameters.BackBufferWidth = 640;
+
             // Create our effect.
             effect = new BasicEffect(GraphicsDevice);
             //effect.VertexColorEnabled = true;
@@ -102,8 +112,18 @@ namespace Stereo
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
             primitives.Add(new SpherePrimitive(GraphicsDevice));
 
-            camera = new Camera(GraphicsDevice, stopWatch, new Vector3(0, 0, 5),
-                Vector3.Zero, Vector3.Up);
+            //camera = new Camera(GraphicsDevice, stopWatch, new Vector3(0, 0, 5),
+            //    Vector3.Zero, Vector3.Up);
+
+            camera = new FreeCamera( GraphicsDevice );
+
+            Components.Add(camera);
+
+            // Go through every component and execute their Initialize method
+            foreach (WinFormComponent component in Components)
+            {
+                component.Initialize();
+            }
 
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
@@ -136,8 +156,8 @@ namespace Stereo
             effect.World = Matrix.CreateTranslation( 0.0f, 0.0f, 0.0f );
             effect.World *= Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
 
-            effect.View = camera.view;
-            effect.Projection = camera.projection;
+            effect.View = camera.viewMatrix;
+            effect.Projection = camera.projectionMatrix;
             //effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5),
             //                                  Vector3.Zero, Vector3.Up);
 
@@ -162,7 +182,7 @@ namespace Stereo
             Vector2 primCenter = new Vector2( 0.0f, 0.0f );
             float size = 1.0f;
 
-            camera.Update( stopWatch );
+            //camera.Update(stopWatch);
 
             foreach (GeometricPrimitive primitive in primitives)
 	        {
@@ -184,6 +204,12 @@ namespace Stereo
 
 		        primitive.Draw( effect );
 	        }
+
+            /// go through every component and update them
+            foreach (WinFormComponent component in Components)
+            {
+                component.Update(stopWatch);
+            }
 
         }
     }
