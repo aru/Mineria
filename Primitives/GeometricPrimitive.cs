@@ -41,6 +41,10 @@ namespace Stereo
         IndexBuffer indexBuffer;
         BasicEffect basicEffect;
 
+        // The world matrix for independently moving each primitive goes here
+        Matrix world = Matrix.Identity;
+        Matrix transform = Matrix.Identity;
+
         #endregion
 
         #region Initialization
@@ -213,7 +217,39 @@ namespace Stereo
             Draw(basicEffect);
         }
 
+        /// <summary> 
+        /// This Draw overload takes a camera object, which is then used to project the primitive
+        /// on the 3D space and then applies any other transformations to the primitive
+        /// </summary>
+        public void Draw(FreeCamera camera, Color color)
+        {
+            // Set BasicEffect parameters.
+            basicEffect.World = world * transform;
+            basicEffect.View = camera.viewMatrix;
+            basicEffect.Projection = camera.projectionMatrix;
+            basicEffect.DiffuseColor = color.ToVector3();
+            basicEffect.Alpha = color.A / 255.0f;
+
+            GraphicsDevice device = basicEffect.GraphicsDevice;
+            device.DepthStencilState = DepthStencilState.Default;
+
+            if (color.A < 255)
+            {
+                // Set renderstates for alpha blended rendering.
+                device.BlendState = BlendState.AlphaBlend;
+            }
+            else
+            {
+                // Set renderstates for opaque rendering.
+                device.BlendState = BlendState.Opaque;
+            }
+
+            // Draw the model, using BasicEffect.
+            Draw(basicEffect);
+        }
+
 
         #endregion
+
     }
 }

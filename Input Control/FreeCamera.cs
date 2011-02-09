@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Stereo
 {
-    class FreeCamera : WinFormComponent
+    public class FreeCamera : WinFormComponent
     {
 
         public Matrix viewMatrix { get; protected set; }

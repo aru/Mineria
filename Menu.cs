@@ -178,31 +178,20 @@ namespace Stereo
                 effect.GraphicsDevice.BlendState = BlendState.Opaque;
             }
 
-            Vector2 screenCenter = new Vector2(0.0f, 0.0f);
-            Vector2 primCenter = new Vector2( 0.0f, 0.0f );
             float size = 1.0f;
 
             //camera.Update(stopWatch);
 
+            float pos = 0.0f;
+
             foreach (GeometricPrimitive primitive in primitives)
 	        {
 
-                //if (primCenter.X + screenCenter.X < GraphicsDevice.Viewport.Width)
-                    primCenter.X += screenCenter.X;
-                //else if (primCenter.Y + screenCenter.Y < GraphicsDevice.Viewport.Height)
-                    primCenter.Y += screenCenter.Y;
-
-                // Divide screen by number of primitives / 2 in x, and by 2 in y to get rows and columns
-                screenCenter = new Vector2( GraphicsDevice.Viewport.Width / ( primitives.Count / 2 ), 
-                    GraphicsDevice.Viewport.Height / 2 );
-
-                // Divide this number by 2 to get the center and size of the prim
-                primCenter = screenCenter / 2;
-                size = primCenter.X;
-
-                //effect.World = Matrix.CreateTranslation(primCenter.X, primCenter.Y, 0.0f);
-
+                effect.World = Matrix.CreateTranslation(new Vector3(pos, 0.0f, 0.0f));
+                
 		        primitive.Draw( effect );
+
+                pos += 2.0f;
 	        }
 
             /// go through every component and update them
