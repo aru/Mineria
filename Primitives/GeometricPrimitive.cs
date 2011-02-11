@@ -44,11 +44,22 @@ namespace Stereo
         // The world matrix for independently moving each primitive goes here
         Matrix world = Matrix.Identity;
         Matrix transform = Matrix.Identity;
+        float yawAngle = 0;
+        float pitchAngle = 0;
+        float rollAngle = 0;
+        Vector3 direction;
 
         #endregion
 
         #region Initialization
 
+        /// <summary>
+        /// The constructor for a 3D Primitive, sets the initial position
+        /// </summary>
+        //public GeometricPrimitive( Vector3 position )
+        //{
+        //    world = Matrix.CreateTranslation(position);
+        //}
 
         /// <summary>
         /// Adds a new vertex to the primitive model. This should only be called

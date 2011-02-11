@@ -110,7 +110,8 @@ namespace Stereo
             primitives.Add(new SpherePrimitive(GraphicsDevice));
             primitives.Add(new CubePrimitive(GraphicsDevice));
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
-            primitives.Add(new SpherePrimitive(GraphicsDevice));
+            primitives.Add(new TorusPrimitive(GraphicsDevice));
+            primitives.Add(new EllipticalCylinder(GraphicsDevice));
 
             //camera = new Camera(GraphicsDevice, stopWatch, new Vector3(0, 0, 5),
             //    Vector3.Zero, Vector3.Up);

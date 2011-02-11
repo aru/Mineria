@@ -50,7 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Input Control\Camera.cs" />
+    <Compile Include="Primitives\BezierPrimitive.cs" />
     <Compile Include="Primitives\CubePrimitive.cs" />
+    <Compile Include="Primitives\EllipticalCylinder.cs" />
+    <Compile Include="Primitives\TeapotPrimitive.cs" />
+    <Compile Include="Primitives\TorusPrimitive.cs" />
     <Compile Include="WinForm Adapters\DrawableWinFormComponent.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
