@@ -89,9 +89,17 @@ namespace Stereo
             // Initialize Component Collection
             Components = new GameComponentCollection();
 
+            RasterizerState wireFrame;
+            wireFrame = new RasterizerState()
+            {
+                FillMode = FillMode.WireFrame,
+                CullMode = CullMode.None,
+            };
+
             // BackBuffer size and stuff
             GraphicsDevice.PresentationParameters.BackBufferHeight = 480;
             GraphicsDevice.PresentationParameters.BackBufferWidth = 640;
+            GraphicsDevice.RasterizerState = wireFrame;
 
             // Create our effect.
             effect = new BasicEffect(GraphicsDevice);
@@ -112,6 +120,7 @@ namespace Stereo
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
             primitives.Add(new TorusPrimitive(GraphicsDevice));
             primitives.Add(new EllipticalCylinder(GraphicsDevice));
+            primitives.Add(new HyperbollicCylinder(GraphicsDevice));
 
             //camera = new Camera(GraphicsDevice, stopWatch, new Vector3(0, 0, 5),
             //    Vector3.Zero, Vector3.Up);
@@ -136,6 +145,7 @@ namespace Stereo
         /// </summary>
         protected override void Draw()
         {
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Spin the primitives according to how much time has passed.

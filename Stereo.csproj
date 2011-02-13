@@ -49,10 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper Classes\Transformation.cs" />
     <Compile Include="Input Control\Camera.cs" />
     <Compile Include="Primitives\BezierPrimitive.cs" />
     <Compile Include="Primitives\CubePrimitive.cs" />
     <Compile Include="Primitives\EllipticalCylinder.cs" />
+    <Compile Include="Primitives\HyperbollicCylinder.cs" />
+    <Compile Include="Primitives\ParabollicCylinder.cs" />
     <Compile Include="Primitives\TeapotPrimitive.cs" />
     <Compile Include="Primitives\TorusPrimitive.cs" />
     <Compile Include="WinForm Adapters\DrawableWinFormComponent.cs" />
