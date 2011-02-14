@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper Classes\BoundingSphereRenderer.cs" />
     <Compile Include="Helper Classes\Transformation.cs" />
     <Compile Include="Input Control\Camera.cs" />
     <Compile Include="Primitives\BezierPrimitive.cs" />
