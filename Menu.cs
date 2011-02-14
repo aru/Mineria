@@ -14,6 +14,8 @@ namespace Stereo
         BasicEffect effect;
 
         ContentManager content;
+        Texture2D backgroundTexture;
+        Rectangle mainFrame;
         SpriteBatch spriteBatch;
         SpriteFont font;
 
@@ -113,6 +115,15 @@ namespace Stereo
             content = new ContentManager(Services, "Content");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             //font = content.Load<SpriteFont>("hudFont"); font doesn't exist yet
+            backgroundTexture = content.Load<Texture2D>(@"Texturas\bg");
+            mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
+
+            spriteBatch.Draw(backgroundTexture, mainFrame,
+                             new Color(0, 0, 0));
+
+            spriteBatch.End();
 
             // Load the primitives
             primitives.Add(new SpherePrimitive(GraphicsDevice));
