@@ -49,6 +49,21 @@ namespace Stereo
         float rollAngle = 0;
         Vector3 direction;
 
+        // Helper class to help us move the object around the scene
+        Transformation transformation;
+
+        public Transformation Transformation
+        {
+            get
+            {
+                return transformation;
+            }
+            set
+            {
+                transformation = value;
+            }
+        }
+
         #endregion
 
         #region Initialization
@@ -56,10 +71,10 @@ namespace Stereo
         /// <summary>
         /// The constructor for a 3D Primitive, sets the initial position
         /// </summary>
-        //public GeometricPrimitive( Vector3 position )
-        //{
-        //    world = Matrix.CreateTranslation(position);
-        //}
+        public GeometricPrimitive()
+        {
+            transformation = new Transformation();
+        }
 
         /// <summary>
         /// Adds a new vertex to the primitive model. This should only be called

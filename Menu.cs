@@ -11,6 +11,8 @@ namespace Stereo
 {
     class StereoControl : GraphicsDeviceControl
     {
+        #region Class Variables
+
         BasicEffect effect;
 
         ContentManager content;
@@ -25,7 +27,14 @@ namespace Stereo
 
         int currentPrimitiveIndex = 0;
 
-        // Timestep
+        // We use matrixes to move the primitives around
+        Matrix[] worldTransforms;
+
+        FreeCamera camera;
+
+        #endregion
+
+        #region Timestep Fixing
         Stopwatch stopWatch;
 
         readonly TimeSpan TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
@@ -33,13 +42,6 @@ namespace Stereo
 
         TimeSpan accumulatedTime;
         TimeSpan lastTime;
-
-        // We use matrixes to move the primitives around
-        Matrix translation = Matrix.Identity;
-        Matrix rotation = Matrix.Identity;
-        Matrix scale = Matrix.Identity;
-
-        FreeCamera camera;
 
         void Tick(object sender, EventArgs e)
         {
@@ -81,14 +83,17 @@ namespace Stereo
             }
         }
 
+#endregion
+
         /// <summary>
         /// Initializes the control.
         /// </summary>
         protected override void Initialize()
         {
-            // Initialize Component Collection
+            // Initialize our custom Component Collection
             Components = new GameComponentCollection();
 
+            // Initialize RasterizerState to Enable wireFrames
             RasterizerState wireFrame;
             wireFrame = new RasterizerState()
             {
@@ -99,15 +104,12 @@ namespace Stereo
             // BackBuffer size and stuff
             GraphicsDevice.PresentationParameters.BackBufferHeight = 480;
             GraphicsDevice.PresentationParameters.BackBufferWidth = 640;
-            GraphicsDevice.RasterizerState = wireFrame;
+            GraphicsDevice.RasterizerState = wireFrame; // Optional, here for debugging purposes and stuff
 
-            // Create our effect.
+            // Create our BasicEffect.
             effect = new BasicEffect(GraphicsDevice);
             //effect.VertexColorEnabled = true;
             effect.EnableDefaultLighting();
-
-            // Start the animation timer.
-            stopWatch = Stopwatch.StartNew();
 
             // Content stuff
             content = new ContentManager(Services, "Content");
@@ -122,11 +124,20 @@ namespace Stereo
             primitives.Add(new EllipticalCylinder(GraphicsDevice));
             primitives.Add(new HyperbollicCylinder(GraphicsDevice));
 
-            //camera = new Camera(GraphicsDevice, stopWatch, new Vector3(0, 0, 5),
-            //    Vector3.Zero, Vector3.Up);
+            // Set the starting position of these new primitives
+            worldTransforms = new Matrix[ primitives.Capacity ];
 
+            float initPos = -5.0f;
+
+            for (int i = 0; i < worldTransforms.Length; i++)
+            {
+                worldTransforms[i] = Matrix.CreateTranslation( new Vector3( initPos, 0, 0 ) );
+                initPos += 1.0f;
+            }
+
+            // Add a new camera to our scene
             camera = new FreeCamera( GraphicsDevice );
-
+            // Attach it as a game component
             Components.Add(camera);
 
             // Go through every component and execute their Initialize method
@@ -134,6 +145,9 @@ namespace Stereo
             {
                 component.Initialize();
             }
+
+            // Start the animation timer.
+            stopWatch = Stopwatch.StartNew();
 
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
@@ -146,6 +160,7 @@ namespace Stereo
         protected override void Draw()
         {
 
+            // Clear the Graphics Device to render the scene
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Spin the primitives according to how much time has passed.
@@ -161,8 +176,6 @@ namespace Stereo
 
             // Set transform matrices.
             float aspect = GraphicsDevice.Viewport.AspectRatio;
-
-            // end of my stuff
 
             effect.World = Matrix.CreateTranslation( 0.0f, 0.0f, 0.0f );
             effect.World *= Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
@@ -189,23 +202,20 @@ namespace Stereo
                 effect.GraphicsDevice.BlendState = BlendState.Opaque;
             }
 
-            float size = 1.0f;
 
-            //camera.Update(stopWatch);
-
+            // Move every primitive next to each other <--- to be erased soon
             float pos = 0.0f;
+
+            Vector3 rotation = new Vector3(1.0f, 0.0f, 0.0f);
 
             foreach (GeometricPrimitive primitive in primitives)
 	        {
-
                 effect.World = Matrix.CreateTranslation(new Vector3(pos, 0.0f, 0.0f));
-                
 		        primitive.Draw( effect );
-
                 pos += 2.0f;
 	        }
 
-            /// go through every component and update them
+            /// Go through every Component attached and Update() them
             foreach (WinFormComponent component in Components)
             {
                 component.Update(stopWatch);
