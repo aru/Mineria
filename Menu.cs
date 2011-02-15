@@ -160,8 +160,8 @@ namespace Stereo
             // Clear the Graphics Device to render the scene
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
+            //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive);
             //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
             //    null, null, null, null, transformMatrix);
 
