@@ -87,6 +87,7 @@ namespace Stereo
 
 #endregion
 
+        #region Initialize
         /// <summary>
         /// Initializes the control.
         /// </summary>
@@ -145,8 +146,9 @@ namespace Stereo
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
         }
+        #endregion
 
-
+        #region Draw
         /// <summary>
         /// Draws the control.
         /// </summary>
@@ -190,7 +192,7 @@ namespace Stereo
             }
 
 
-            // Move every primitive next to each other <--- to be erased soon
+            // Move every primitive next to each other <--- to be erased soon <--- LIE!
             float pos = -5.0f;
 
             // For each Geometric Primitive
@@ -215,5 +217,6 @@ namespace Stereo
             }
 
         }
+        #endregion
     }
 }
