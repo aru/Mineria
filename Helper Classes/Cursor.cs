@@ -11,6 +11,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
@@ -19,13 +20,16 @@ namespace Stereo
     /// <summary>
     /// Cursor is a DrawableGameComponent that draws a cursor on the screen.
     /// </summary>
-    public class Cursor : DrawableGameComponent
+    public class Cursor : DrawableWinFormComponent
     {
         #region Fields and Properties
 
         // this constant controls how fast the gamepad moves the cursor. this constant
         // is in pixels per second.
         const float CursorSpeed = 400.0f;
+
+        // the content manager needed to load textures
+        ContentManager content;
 
         // this spritebatch is created internally, and is used to draw the cursor.
         SpriteBatch spriteBatch;
@@ -46,8 +50,7 @@ namespace Stereo
 
         #region Initialization
 
-        public Cursor(Game game)
-            : base(game)
+        public Cursor()
         {
         }
 
@@ -55,7 +58,7 @@ namespace Stereo
         // also, we need to create a SpriteBatch.
         protected override void LoadContent()
         {
-            cursorTexture = Game.Content.Load<Texture2D>("cursor");
+            cursorTexture = content.Load<Texture2D>("texturas/cursor");
             textureCenter = new Vector2(cursorTexture.Width / 2, cursorTexture.Height / 2);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);

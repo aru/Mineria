@@ -46,6 +46,10 @@ namespace Stereo
             "Cilindro hiperbólico",
         };
 
+        // The cursor is used to tell what the user's pointer/mouse is over. The cursor
+        // is moved with the left thumbstick. On windows, the mouse can be used as well.
+        Cursor cursor;
+
         #endregion
 
         #region Timestep Fixing
@@ -272,26 +276,92 @@ namespace Stereo
                 if (drawBoundingSphere)
                 {
 
-                    // the mesh's BoundingSphere is stored relative to the mesh itself.
-                    // (Mesh space). We want to get this BoundingSphere in terms of world
-                    // coordinates. To do this, we calculate a matrix that will transform
-                    // from coordinates from mesh space into world space....
-                    //Matrix world = absoluteBoneTransforms[mesh.ParentBone.Index] * worldTransform;
-                    //Matrix world = primitive.Transformation.Matrix;
-
-                    // ... and then transform the BoundingSphere using that matrix.
-                    //BoundingSphere sphere = TransformBoundingSphere(new BoundingSphere(primitive.Transformation.Translate, 0.5f), Matrix.Identity);
-
                     // We already have the center position of each primitive even if they move accros the world
                     // by using the translate vector of each primitive as a center for each boundingSphere, we
                     // can just easily create a new sphere, take it shawn
                     BoundingSphere sphere = new BoundingSphere(primitive.Transformation.Translate, 0.5f);
 
-                    // now draw the sphere with our renderer
+                    // draw the sphere with our renderer
                     BoundingSphereRenderer.Draw(sphere, viewMatrix, projectionMatrix);
 
-
                 }
+
+            }
+
+            // We loop again for every primitive, why? because we now want to be drawing some text above each primitive
+            // using spriteBatch(), since spriteBatch changes some states in the graphicsDevice, we need to reset some
+            // parameters to draw 3D again, since initializing, ending, resetting uses up cycles, we only want to do this
+            // once, not every time we go through a primitive
+
+            // Begin the SpriteBatch
+            spriteBatch.Begin();
+
+            // If the cursor is over a model, we'll draw its name. To figure out if
+            // the cursor is over a model, we'll use cursor.CalculateCursorRay. That
+            // function gives us a world space ray that starts at the "eye" of the
+            // camera, and shoots out in the direction pointed to by the cursor.
+            Ray cursorRay = cursor.CalculateCursorRay(projectionMatrix, viewMatrix);
+
+            // Initialize a variable
+            int i = 0;
+
+            // Loop through the primitives
+            foreach (GeometricPrimitive primitive in primitives)
+            {
+                // Gimme a big enough sphere
+                BoundingSphere sphere = new BoundingSphere(primitive.Transformation.Translate, 0.5f);
+
+                // To check for intersection
+                if (sphere.Intersects(cursorRay) != null)
+                {
+                    // if there is an intersection
+
+                    // now we know that we want to draw the model's name. We want to
+                    // draw the name a little bit above the model: but where's that?
+                    // SpriteBatch.DrawString takes screen space coordinates, but the 
+                    // model's position is stored in world space. 
+
+                    // we'll use Viewport.Project, which will project a world space
+                    // point into screen space. We'll project the vector (0,0,0) using
+                    // the model's world matrix, and the view and projection matrices.
+                    // that will tell us where the model's origin is on the screen.
+                    Vector3 screenSpace = GraphicsDevice.Viewport.Project(
+                        Vector3.Zero, camera.projectionMatrix, camera.viewMatrix,
+                        primitive.Transformation.Matrix);
+
+                    // we want to draw the text a little bit above that, so we'll use
+                    // the screen space position - 60 to move up a little bit. A better
+                    // approach would be to calculate where the top of the model is, and
+                    // draw there. It's not that much harder to do, but to keep the
+                    // sample easy, we'll take the easy way out.
+                    Vector2 textPosition =
+                        new Vector2(screenSpace.X, screenSpace.Y - 60);
+
+                    // we want to draw the text centered around textPosition, so we'll
+                    // calculate the center of the string, and use that as the origin
+                    // argument to spriteBatch.DrawString. DrawString automatically
+                    // centers text around the vector specified by the origin argument.
+                    Vector2 stringCenter =
+                        font.MeasureString(ModelFilenames[i]) / 2;
+
+                    // to make the text readable, we'll draw the same thing twice, once
+                    // white and once black, with a little offset to get a drop shadow
+                    // effect.
+
+                    // first we'll draw the shadow...
+                    Vector2 shadowOffset = new Vector2(1, 1);
+                    spriteBatch.DrawString(font, ModelFilenames[i],
+                        textPosition + shadowOffset, Color.Black, 0.0f,
+                        stringCenter, 1.0f, SpriteEffects.None, 0.0f);
+
+                    // ...and then the real text on top.
+                    spriteBatch.DrawString(font, ModelFilenames[i],
+                        textPosition, Color.White, 0.0f,
+                        stringCenter, 1.0f, SpriteEffects.None, 0.0f);
+                }
+
+                // add up i
+                ++i;
 
             }
 
@@ -352,35 +422,15 @@ namespace Stereo
         /// absolute bone transforms for the model. this can be obtained using the
         /// Model.CopyAbsoluteBoneTransformsTo function.</param>
         /// <returns>true if the ray intersects the model.</returns>
-        private static bool RayIntersectsModel(Ray ray, Model model,
-            Matrix worldTransform, Matrix[] absoluteBoneTransforms)
+        private static bool RayIntersectsSphere(Ray ray, BoundingSphere sphere)
         {
-            // Each ModelMesh in a Model has a bounding sphere, so to check for an
-            // intersection in the Model, we have to check every mesh.
-            foreach (ModelMesh mesh in model.Meshes)
+
+            if (sphere.Intersects(ray) != null)
             {
-                // the mesh's BoundingSphere is stored relative to the mesh itself.
-                // (Mesh space). We want to get this BoundingSphere in terms of world
-                // coordinates. To do this, we calculate a matrix that will transform
-                // from coordinates from mesh space into world space....
-                Matrix world = absoluteBoneTransforms[mesh.ParentBone.Index] * worldTransform;
-
-                // ... and then transform the BoundingSphere using that matrix.
-                BoundingSphere sphere = TransformBoundingSphere(mesh.BoundingSphere, world);
-
-                // now that the we have a sphere in world coordinates, we can just use
-                // the BoundingSphere class's Intersects function. Intersects returns a
-                // nullable float (float?). This value is the distance at which the ray
-                // intersects the BoundingSphere, or null if there is no intersection.
-                // so, if the value is not null, we have a collision.
-                if (sphere.Intersects(ray) != null)
-                {
-                    return true;
-                }
+                return true;
             }
 
-            // if we've gotten this far, we've made it through every BoundingSphere, and
-            // none of them intersected the ray. This means that there was no collision,
+            // If we've gotten this far, This means that there was no collision,
             // and we should return false.
             return false;
         }

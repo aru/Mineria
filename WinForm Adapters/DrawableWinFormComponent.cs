@@ -8,14 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Stereo
 {
-    class DrawableWinFormComponent : WinFormComponent, IDrawable, IDisposable
+    public class DrawableWinFormComponent : WinFormComponent, IDrawable, IDisposable
     {
-        public void Draw(GameTime gameTime)
+        public virtual void Draw(GameTime gameTime)
         {
             
         }
 
-        public void Draw(System.Diagnostics.Stopwatch stopwatch)
+        public virtual void Draw(System.Diagnostics.Stopwatch stopwatch)
         {
 
         }
