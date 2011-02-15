@@ -120,14 +120,7 @@ namespace Stereo
             backgroundTexture = content.Load<Texture2D>(@"Texturas\bg");
             mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
-
-            spriteBatch.Draw(backgroundTexture, mainFrame,
-                             new Color(0, 0, 0));
-
-            spriteBatch.End();
-
-            // Load the primitives
+            // Load the primitives we want to be drawn
             primitives.Add(new SpherePrimitive(GraphicsDevice));
             primitives.Add(new CubePrimitive(GraphicsDevice));
             primitives.Add(new CylinderPrimitive(GraphicsDevice));
@@ -166,27 +159,21 @@ namespace Stereo
             // Spin the primitives according to how much time has passed.
             float time = (float)stopWatch.Elapsed.TotalSeconds;
 
+            // Lulz done to get that weird spinning rotation
             float yaw = time * 0.7f;
             float pitch = time * 0.8f;
             float roll = time * 0.9f;
 
             // Set the color
-            GeometricPrimitive currentPrimitive = primitives[currentPrimitiveIndex];
             Color color = Color.Red;
 
-            // Set transform matrices.
-            float aspect = GraphicsDevice.Viewport.AspectRatio;
-
-            effect.World = Matrix.CreateTranslation( 0.0f, 0.0f, 0.0f );
-            effect.World *= Matrix.CreateFromYawPitchRoll(yaw, pitch, roll);
-
+            // Set transform matrices via the camera
             effect.View = camera.viewMatrix;
             effect.Projection = camera.projectionMatrix;
-            //effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5),
-            //                                  Vector3.Zero, Vector3.Up);
 
-            //effect.Projection = Matrix.CreatePerspectiveFieldOfView(1, aspect, 1, 10);
-
+            /// <summary> 
+            /// This part just sets some values for the basic shader to work and stuff
+            /// </summary>
             effect.DiffuseColor = color.ToVector3();
             effect.Alpha = color.A / 255.0f;
 
@@ -204,13 +191,13 @@ namespace Stereo
 
 
             // Move every primitive next to each other <--- to be erased soon
-            float pos = 0.0f;
-
-            Vector3 rotation = new Vector3(1.0f, 0.0f, 0.0f);
+            float pos = -5.0f;
 
             // For each Geometric Primitive
             foreach (GeometricPrimitive primitive in primitives)
 	        {
+                // Rotate them for t3h lulz
+                primitive.Transformation.Rotate = new Vector3(yaw, pitch, roll) * 30.0f;
                 // Offset each primitive by a factor
                 primitive.Transformation.Translate = new Vector3( pos, 0.0f, 0.0f );
                 // Update the world matrix by this factor
