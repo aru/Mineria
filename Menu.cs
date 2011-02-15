@@ -34,6 +34,8 @@ namespace Stereo
 
         FreeCamera camera;
 
+        RasterizerState wireFrame;
+
         #endregion
 
         #region Timestep Fixing
@@ -97,7 +99,6 @@ namespace Stereo
             Components = new GameComponentCollection();
 
             // Initialize RasterizerState to Enable wireFrames
-            RasterizerState wireFrame;
             wireFrame = new RasterizerState()
             {
                 FillMode = FillMode.WireFrame,
@@ -174,6 +175,7 @@ namespace Stereo
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             //Depending on the 3D content
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            GraphicsDevice.RasterizerState = wireFrame;
 
             // Spin the primitives according to how much time has passed.
             float time = (float)stopWatch.Elapsed.TotalSeconds;
