@@ -277,11 +277,15 @@ namespace Stereo
                     // coordinates. To do this, we calculate a matrix that will transform
                     // from coordinates from mesh space into world space....
                     //Matrix world = absoluteBoneTransforms[mesh.ParentBone.Index] * worldTransform;
-                    Matrix world = primitive.Transformation.Matrix;
+                    //Matrix world = primitive.Transformation.Matrix;
 
                     // ... and then transform the BoundingSphere using that matrix.
-                    BoundingSphere sphere = TransformBoundingSphere(new BoundingSphere(primitive.Transformation.Translate, 0.5f), Matrix.Identity);
-                    //BoundingSphere sphere = new BoundingSphere(primitive.Transformation.Matrix, world);
+                    //BoundingSphere sphere = TransformBoundingSphere(new BoundingSphere(primitive.Transformation.Translate, 0.5f), Matrix.Identity);
+
+                    // We already have the center position of each primitive even if they move accros the world
+                    // by using the translate vector of each primitive as a center for each boundingSphere, we
+                    // can just easily create a new sphere, take it shawn
+                    BoundingSphere sphere = new BoundingSphere(primitive.Transformation.Translate, 0.5f);
 
                     // now draw the sphere with our renderer
                     BoundingSphereRenderer.Draw(sphere, viewMatrix, projectionMatrix);
@@ -332,6 +336,53 @@ namespace Stereo
             transformedSphere.Center = Vector3.Transform(sphere.Center, transform);
 
             return transformedSphere;
+        }
+
+        /// <summary>
+        /// This helper function checks to see if a ray will intersect with a model.
+        /// The model's bounding spheres are used, and the model is transformed using
+        /// the matrix specified in the worldTransform argument.
+        /// </summary>
+        /// <param name="ray">the ray to perform the intersection check with</param>
+        /// <param name="model">the model to perform the intersection check with.
+        /// the model's bounding spheres will be used.</param>
+        /// <param name="worldTransform">a matrix that positions the model
+        /// in world space</param>
+        /// <param name="absoluteBoneTransforms">this array of matrices contains the
+        /// absolute bone transforms for the model. this can be obtained using the
+        /// Model.CopyAbsoluteBoneTransformsTo function.</param>
+        /// <returns>true if the ray intersects the model.</returns>
+        private static bool RayIntersectsModel(Ray ray, Model model,
+            Matrix worldTransform, Matrix[] absoluteBoneTransforms)
+        {
+            // Each ModelMesh in a Model has a bounding sphere, so to check for an
+            // intersection in the Model, we have to check every mesh.
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                // the mesh's BoundingSphere is stored relative to the mesh itself.
+                // (Mesh space). We want to get this BoundingSphere in terms of world
+                // coordinates. To do this, we calculate a matrix that will transform
+                // from coordinates from mesh space into world space....
+                Matrix world = absoluteBoneTransforms[mesh.ParentBone.Index] * worldTransform;
+
+                // ... and then transform the BoundingSphere using that matrix.
+                BoundingSphere sphere = TransformBoundingSphere(mesh.BoundingSphere, world);
+
+                // now that the we have a sphere in world coordinates, we can just use
+                // the BoundingSphere class's Intersects function. Intersects returns a
+                // nullable float (float?). This value is the distance at which the ray
+                // intersects the BoundingSphere, or null if there is no intersection.
+                // so, if the value is not null, we have a collision.
+                if (sphere.Intersects(ray) != null)
+                {
+                    return true;
+                }
+            }
+
+            // if we've gotten this far, we've made it through every BoundingSphere, and
+            // none of them intersected the ray. This means that there was no collision,
+            // and we should return false.
+            return false;
         }
 
         #endregion
