@@ -13,8 +13,10 @@ namespace Stereo
     {
         #region Class Variables
 
+        // Our Basic effect
         BasicEffect effect;
 
+        // Content stuff
         ContentManager content;
         Texture2D backgroundTexture;
         Rectangle mainFrame;
@@ -27,14 +29,22 @@ namespace Stereo
         // Store a list of primitive models, plus which one is currently selected.
         List<GeometricPrimitive> primitives = new List<GeometricPrimitive>();
 
-        int currentPrimitiveIndex = 0;
-
-        // We use matrixes to move the primitives around
-        Matrix[] worldTransforms;
-
+        // Our camera used for this example
         FreeCamera camera;
 
+        // Some cool stuff
         RasterizerState wireFrame;
+        bool drawBoundingSphere = true;
+
+        // The names of each primitive, these will appear right above a pointed primitive
+        static readonly string[] ModelFilenames = new string[]{
+            "Esfera",
+            "Cubo",
+            "Cilindro",
+            "Toroide",
+            "Cilindro elíptico",
+            "Cilindro hiperbólico",
+        };
 
         #endregion
 
@@ -131,6 +141,9 @@ namespace Stereo
             primitives.Add(new EllipticalCylinder(GraphicsDevice));
             primitives.Add(new HyperbollicCylinder(GraphicsDevice));
 
+            // Initialize the renderer for our bounding spheres
+            BoundingSphereRenderer.Initialize(GraphicsDevice, 45);
+
             // Add a new camera to our scene
             camera = new FreeCamera( GraphicsDevice );
             // Attach it as a game component
@@ -210,24 +223,8 @@ namespace Stereo
                 effect.GraphicsDevice.BlendState = BlendState.Opaque;
             }
 
-
-            // Move every primitive next to each other <--- to be erased soon <--- LIE!
-            float pos = -5.0f;
-
-            // For each Geometric Primitive
-            foreach (GeometricPrimitive primitive in primitives)
-	        {
-                // Rotate them for t3h lulz
-                primitive.Transformation.Rotate = new Vector3(yaw, pitch, roll) * 30.0f;
-                // Offset each primitive by a factor
-                primitive.Transformation.Translate = new Vector3( pos, 0.0f, 0.0f );
-                // Update the world matrix by this factor
-                effect.World = primitive.Transformation.Matrix;
-                // Draw the primitive
-		        primitive.Draw( effect );
-                // Update this factor
-                pos += 2.0f;
-	        }
+            // Draw them prims
+            DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
 
             /// Go through every Component attached and Update() them
             foreach (WinFormComponent component in Components)
@@ -236,6 +233,107 @@ namespace Stereo
             }
 
         }
+        #endregion
+
+        #region HelperFunctions
+
+        /// <summary>
+        ///  This function draws every primitive on screen, takes 2 matrices, the current time, and does magic 
+        ///  to render the boundingSpheres around every primitive
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <param name="viewMatrix"></param>
+        /// <param name="projectionMatrix"></param>
+        /// <param name="time"></param>
+        void DrawPrimitives( BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
+        {
+
+            // Lulz done to get that weird spinning rotation
+            float yaw = time * 0.7f;
+            float pitch = time * 0.8f;
+            float roll = time * 0.9f;
+
+            // Move every primitive next to each other <--- to be erased soon <--- LIE!
+            float pos = -5.0f;
+
+            foreach (GeometricPrimitive primitive in primitives)
+            {
+                // Rotate them for t3h lulz
+                primitive.Transformation.Rotate = new Vector3(yaw, pitch, roll) * 30.0f;
+                // Offset each primitive by a factor
+                primitive.Transformation.Translate = new Vector3(pos, 0.0f, 0.0f);
+                // Update the world matrix by this factor
+                effect.World = primitive.Transformation.Matrix;
+                // Draw the primitive
+                primitive.Draw(effect);
+                // Update this factor
+                pos += 2.0f;
+
+                if (drawBoundingSphere)
+                {
+
+                    // the mesh's BoundingSphere is stored relative to the mesh itself.
+                    // (Mesh space). We want to get this BoundingSphere in terms of world
+                    // coordinates. To do this, we calculate a matrix that will transform
+                    // from coordinates from mesh space into world space....
+                    //Matrix world = absoluteBoneTransforms[mesh.ParentBone.Index] * worldTransform;
+                    Matrix world = primitive.Transformation.Matrix;
+
+                    // ... and then transform the BoundingSphere using that matrix.
+                    BoundingSphere sphere = TransformBoundingSphere(new BoundingSphere(primitive.Transformation.Translate, 0.5f), Matrix.Identity);
+                    //BoundingSphere sphere = new BoundingSphere(primitive.Transformation.Matrix, world);
+
+                    // now draw the sphere with our renderer
+                    BoundingSphereRenderer.Draw(sphere, viewMatrix, projectionMatrix);
+
+
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// This helper function takes a BoundingSphere and a transform matrix, and
+        /// returns a transformed version of that BoundingSphere.
+        /// </summary>
+        /// <param name="sphere">the BoundingSphere to transform</param>
+        /// <param name="world">how to transform the BoundingSphere.</param>
+        /// <returns>the transformed BoundingSphere/</returns>
+        private static BoundingSphere TransformBoundingSphere(BoundingSphere sphere, Matrix transform)
+        {
+            BoundingSphere transformedSphere;
+
+            // the transform can contain different scales on the x, y, and z components.
+            // this has the effect of stretching and squishing our bounding sphere along
+            // different axes. Obviously, this is no good: a bounding sphere has to be a
+            // SPHERE. so, the transformed sphere's radius must be the maximum of the 
+            // scaled x, y, and z radii.
+
+            // to calculate how the transform matrix will affect the x, y, and z
+            // components of the sphere, we'll create a vector3 with x y and z equal
+            // to the sphere's radius...
+            Vector3 scale3 = new Vector3(sphere.Radius, sphere.Radius, sphere.Radius);
+
+            // then transform that vector using the transform matrix. we use
+            // TransformNormal because we don't want to take translation into account.
+            scale3 = Vector3.TransformNormal(scale3, transform);
+
+            // scale3 contains the x, y, and z radii of a squished and stretched sphere.
+            // we'll set the finished sphere's radius to the maximum of the x y and z
+            // radii, creating a sphere that is large enough to contain the original 
+            // squished sphere.
+            transformedSphere.Radius = Math.Max(scale3.X, Math.Max(scale3.Y, scale3.Z));
+
+            // transforming the center of the sphere is much easier. we can just use 
+            // Vector3.Transform to transform the center vector. notice that we're using
+            // Transform instead of TransformNormal because in this case we DO want to 
+            // take translation into account.
+            transformedSphere.Center = Vector3.Transform(sphere.Center, transform);
+
+            return transformedSphere;
+        }
+
         #endregion
     }
 }
