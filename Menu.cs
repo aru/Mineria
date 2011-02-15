@@ -135,17 +135,6 @@ namespace Stereo
             primitives.Add(new EllipticalCylinder(GraphicsDevice));
             primitives.Add(new HyperbollicCylinder(GraphicsDevice));
 
-            // Set the starting position of these new primitives
-            worldTransforms = new Matrix[ primitives.Capacity ];
-
-            float initPos = -5.0f;
-
-            for (int i = 0; i < worldTransforms.Length; i++)
-            {
-                worldTransforms[i] = Matrix.CreateTranslation( new Vector3( initPos, 0, 0 ) );
-                initPos += 1.0f;
-            }
-
             // Add a new camera to our scene
             camera = new FreeCamera( GraphicsDevice );
             // Attach it as a game component
@@ -219,10 +208,16 @@ namespace Stereo
 
             Vector3 rotation = new Vector3(1.0f, 0.0f, 0.0f);
 
+            // For each Geometric Primitive
             foreach (GeometricPrimitive primitive in primitives)
 	        {
-                effect.World = Matrix.CreateTranslation(new Vector3(pos, 0.0f, 0.0f));
+                // Offset each primitive by a factor
+                primitive.Transformation.Translate = new Vector3( pos, 0.0f, 0.0f );
+                // Update the world matrix by this factor
+                effect.World = primitive.Transformation.Matrix;
+                // Draw the primitive
 		        primitive.Draw( effect );
+                // Update this factor
                 pos += 2.0f;
 	        }
 
