@@ -120,13 +120,6 @@ namespace Stereo
             backgroundTexture = content.Load<Texture2D>(@"Texturas\bg");
             mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
-
-            spriteBatch.Draw(backgroundTexture, mainFrame,
-                             new Color(0, 0, 0));
-
-            spriteBatch.End();
-
             // Load the primitives
             primitives.Add(new SpherePrimitive(GraphicsDevice));
             primitives.Add(new CubePrimitive(GraphicsDevice));
@@ -173,6 +166,22 @@ namespace Stereo
 
             // Clear the Graphics Device to render the scene
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive);
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
+            //    null, null, null, null, transformMatrix);
+
+            spriteBatch.Draw(backgroundTexture, mainFrame,
+                             Color.White);
+
+            spriteBatch.End();
+
+            //we reset the states modified by the spritebatch
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            //Depending on the 3D content
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             // Spin the primitives according to how much time has passed.
             float time = (float)stopWatch.Elapsed.TotalSeconds;
