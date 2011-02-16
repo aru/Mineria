@@ -51,8 +51,8 @@ namespace Stereo
             "Cubo",
             "Cilindro",
             "Toroide",
-            "Cilindro elíptico",
-            "Cilindro hiperbólico",
+            "Cilindro eliptico",
+            "Cilindro hiperbolico",
         };
 
         // The cursor is used to tell what the user's pointer/mouse is over. The cursor
@@ -169,6 +169,9 @@ namespace Stereo
             // Add a new cursor to our scene
             cursor = new Cursor(GraphicsDevice, content, spriteBatch);
             Components.Add(cursor);
+
+            // Set up the mouse and stuff
+            Mouse.WindowHandle = this.Handle;
 
             // Go through every component and execute their Initialize method
             foreach (WinFormComponent component in Components)
