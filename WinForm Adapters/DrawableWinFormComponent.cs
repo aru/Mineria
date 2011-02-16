@@ -20,7 +20,7 @@ namespace Stereo
 
         }
 
-        protected virtual void LoadContent() { }
+        public virtual void LoadContent() { }
 
         /// <summary>
         ///   Indicates when the drawable component should be drawn in relation to other

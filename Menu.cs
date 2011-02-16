@@ -5,12 +5,21 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Runtime.InteropServices;
 
 namespace Stereo
 {
     class StereoControl : GraphicsDeviceControl
     {
+
+        #region Constructor
+        //public void Menu()
+        //{
+            
+        //}
+        #endregion
+
         #region Class Variables
 
         // Our Basic effect
@@ -109,6 +118,7 @@ namespace Stereo
         /// </summary>
         protected override void Initialize()
         {
+
             // Initialize our custom Component Collection
             Components = new GameComponentCollection();
 
@@ -131,8 +141,11 @@ namespace Stereo
 
             // Content stuff
             content = new ContentManager(Services, "Content");
+            // Set our root directory
+            content.RootDirectory = "Content";
+            // use new spriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            //font = content.Load<SpriteFont>("hudFont"); font doesn't exist yet
+            font = content.Load<SpriteFont>(@"fonts\hudFont");
             backgroundTexture = content.Load<Texture2D>(@"Texturas\bg");
             mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -152,6 +165,10 @@ namespace Stereo
             camera = new FreeCamera( GraphicsDevice );
             // Attach it as a game component
             Components.Add(camera);
+
+            // Add a new cursor to our scene
+            cursor = new Cursor(GraphicsDevice, content, spriteBatch);
+            Components.Add(cursor);
 
             // Go through every component and execute their Initialize method
             foreach (WinFormComponent component in Components)
@@ -229,6 +246,15 @@ namespace Stereo
 
             // Draw them prims
             DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
+
+            // Go through every DrawableComponent and Draw() them
+            //foreach (DrawableWinFormComponent drawable in Components)
+            //{
+            //    if( drawable.ToString() == "DrawableWinFormComponent" )
+            //        drawable.Draw(stopWatch);
+            //}
+
+            cursor.Draw(stopWatch);
 
             /// Go through every Component attached and Update() them
             foreach (WinFormComponent component in Components)
@@ -361,9 +387,12 @@ namespace Stereo
                 }
 
                 // add up i
-                ++i;
+                i++;
 
             }
+
+            // End the spriteBatch, duh
+            spriteBatch.End();
 
         }
 

@@ -30,6 +30,8 @@ namespace Stereo
 
         // the content manager needed to load textures
         ContentManager content;
+        // The graphicsDevice to draw and update
+        GraphicsDevice graphicsDevice;
 
         // this spritebatch is created internally, and is used to draw the cursor.
         SpriteBatch spriteBatch;
@@ -50,44 +52,43 @@ namespace Stereo
 
         #region Initialization
 
-        public Cursor()
+        public Cursor( GraphicsDevice graphicsDevice, ContentManager content, SpriteBatch spriteBatch )
         {
+            this.graphicsDevice = graphicsDevice;
+            this.content = content;
+            this.spriteBatch = spriteBatch;
         }
 
         // LoadContent needs to load the cursor texture and find its center.
         // also, we need to create a SpriteBatch.
-        protected override void LoadContent()
+        public override void Initialize()
         {
             cursorTexture = content.Load<Texture2D>("texturas/cursor");
             textureCenter = new Vector2(cursorTexture.Width / 2, cursorTexture.Height / 2);
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            //spriteBatch = new SpriteBatch( graphicsDevice );
 
             // we want to default the cursor to start in the center of the screen
-            Viewport vp = GraphicsDevice.Viewport;
+            Viewport vp = graphicsDevice.Viewport;
             position.X = vp.X + (vp.Width / 2);
             position.Y = vp.Y + (vp.Height / 2);
 
-            base.LoadContent();
         }
 
         #endregion
 
         #region Update
 
-        public override void Update(GameTime gameTime)
+        public override void Update(System.Diagnostics.Stopwatch stopwatch)
         {
             // We use different input on each platform:
             // On Xbox, we use the GamePad's DPad and left thumbstick to move the cursor around the screen.
             // On Windows, we directly map the cursor to the location of the mouse.
             // On Windows Phone, we use the primary touch point for the location of the cursor.
-#if XBOX
-            UpdateXboxInput(gameTime);
-#elif WINDOWS
+
+            //UpdateXboxInput(gameTime);
             UpdateWindowsInput();
-#elif WINDOWS_PHONE
-            UpdateWindowsPhoneInput();
-#endif
+            //UpdateWindowsPhoneInput();
         }
 
         /// <summary>
@@ -136,7 +137,7 @@ namespace Stereo
                 (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // clamp the cursor position to the viewport, so that it can't move off the screen.
-            Viewport vp = GraphicsDevice.Viewport;
+            Viewport vp = graphicsDevice.Viewport;
             position.X = MathHelper.Clamp(position.X, vp.X, vp.X + vp.Width);
             position.Y = MathHelper.Clamp(position.Y, vp.Y, vp.Y + vp.Height);
         }
@@ -155,7 +156,7 @@ namespace Stereo
 
         #region Draw
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(System.Diagnostics.Stopwatch stopwatch)
         {
             spriteBatch.Begin();
 
@@ -186,10 +187,10 @@ namespace Stereo
             // would be in world space. we'll need the projection matrix and view
             // matrix, which we have saved as member variables. We also need a world
             // matrix, which can just be identity.
-            Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearSource,
+            Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
                 projectionMatrix, viewMatrix, Matrix.Identity);
 
-            Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farSource,
+            Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
                 projectionMatrix, viewMatrix, Matrix.Identity);
 
             // find the direction vector that goes from the nearPoint to the farPoint
