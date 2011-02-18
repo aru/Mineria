@@ -42,8 +42,11 @@ namespace Stereo
         FreeCamera camera;
 
         // Some cool stuff
-        RasterizerState wireFrame;
-        bool drawBoundingSphere = true;
+        RasterizerState wireFrame; // to draw wireFrames
+        bool drawBoundingSphere = true; // expose the boundingSpheres
+        bool inspectionMode = false; // activate inspection Mode
+        int inspectedPrim = 0; // selected Primitive to inspect
+        MouseState prevMouseState, currMouseState;
 
         // The names of each primitive, these will appear right above a pointed primitive
         static readonly string[] ModelFilenames = new string[]{
@@ -247,8 +250,17 @@ namespace Stereo
                 effect.GraphicsDevice.BlendState = BlendState.Opaque;
             }
 
-            // Draw them prims
-            DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
+            // If we are in inspection Mode
+            if (inspectionMode)
+            {
+                // Focus on one primitive and draw it
+                DrawInspectedPrimitive( effect, camera.viewMatrix, camera.projectionMatrix, time );
+            }
+            else
+            {
+                // Draw them prims
+                DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
+            }
 
             // Go through every DrawableComponent and Draw() them
             //foreach (DrawableWinFormComponent drawable in Components)
@@ -256,8 +268,25 @@ namespace Stereo
             //    if( drawable.ToString() == "DrawableWinFormComponent" )
             //        drawable.Draw(stopWatch);
             //}
+            
+            // That clearly failed and there's no time to learn more C#, just call it
+            cursor.Draw(stopWatch); // draw the cursor
 
-            cursor.Draw(stopWatch);
+            // if there is an intersection and the user has pressed the left mouse button
+            // we need to go into inspection mode
+            currMouseState = Mouse.GetState();
+
+            // Stop inspection mode
+            if (currMouseState.RightButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
+                        prevMouseState.RightButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+            {
+                // Do stuff, like going into inspection mode
+                if (inspectionMode)
+                    inspectionMode = false;
+            }
+
+            // Set the previousMouseState to be the currentMouseState so the above code works  
+            prevMouseState = currMouseState;
 
             /// Go through every Component attached and Update() them
             foreach (WinFormComponent component in Components)
@@ -343,7 +372,6 @@ namespace Stereo
                 // To check for intersection
                 if (sphere.Intersects(cursorRay) != null)
                 {
-                    // if there is an intersection
 
                     // now we know that we want to draw the model's name. We want to
                     // draw the name a little bit above the model: but where's that?
@@ -387,6 +415,25 @@ namespace Stereo
                     spriteBatch.DrawString(font, ModelFilenames[i],
                         textPosition, Color.White, 0.0f,
                         stringCenter, 1.0f, SpriteEffects.None, 0.0f);
+
+                    // if there is an intersection and the user has pressed the left mouse button
+                    // we need to go into inspection mode
+                    currMouseState = Mouse.GetState();
+
+                    if ( currMouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
+                        prevMouseState.LeftButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                    {
+                        // Do stuff, like going into inspection mode
+                        if (!inspectionMode)
+                        {
+                            inspectionMode = true;
+                            inspectedPrim = i;
+                        }
+                    }
+
+                    // Set the previousMouseState to be the currentMouseState so the above code works  
+                    prevMouseState = currMouseState;
+
                 }
 
                 // add up i
@@ -446,14 +493,8 @@ namespace Stereo
         /// the matrix specified in the worldTransform argument.
         /// </summary>
         /// <param name="ray">the ray to perform the intersection check with</param>
-        /// <param name="model">the model to perform the intersection check with.
-        /// the model's bounding spheres will be used.</param>
-        /// <param name="worldTransform">a matrix that positions the model
-        /// in world space</param>
-        /// <param name="absoluteBoneTransforms">this array of matrices contains the
-        /// absolute bone transforms for the model. this can be obtained using the
-        /// Model.CopyAbsoluteBoneTransformsTo function.</param>
-        /// <returns>true if the ray intersects the model.</returns>
+        /// <param name="sphere">the sphere to perform the intersection check with. </param>
+        /// <returns>true if the ray intersects the sphere.</returns>
         private static bool RayIntersectsSphere(Ray ray, BoundingSphere sphere)
         {
 
@@ -465,6 +506,25 @@ namespace Stereo
             // If we've gotten this far, This means that there was no collision,
             // and we should return false.
             return false;
+        }
+
+        void DrawInspectedPrimitive(BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
+        {
+
+            // Lulz done to get that weird spinning rotation
+            float yaw = time * 0.7f;
+            float pitch = time * 0.8f;
+            float roll = time * 0.9f;
+
+            // Rotate them for t3h lulz
+            primitives[inspectedPrim].Transformation.Rotate = new Vector3(yaw, pitch, roll) * 30.0f;
+            // Offset each primitive by a factor
+            primitives[inspectedPrim].Transformation.Translate = new Vector3(0.0f, 0.0f, 0.0f);
+            // Update the world matrix by this factor
+            effect.World = primitives[inspectedPrim].Transformation.Matrix;
+            // Draw the primitive
+            primitives[inspectedPrim].Draw(effect);
+
         }
 
         #endregion
