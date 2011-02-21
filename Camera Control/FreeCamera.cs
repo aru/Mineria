@@ -14,7 +14,7 @@ namespace Stereo
         public Matrix viewMatrix { get; protected set; }
         public Matrix projectionMatrix { get; protected set; }
 
-        Vector3 cameraPosition;
+        public Vector3 cameraPosition { get; protected set; }
         Quaternion cameraRotation;
 
         GraphicsDevice graphicsDevice;
@@ -64,10 +64,17 @@ namespace Stereo
             Quaternion additionalRotation = Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), updownRotation) * Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), leftrightRotation);
             cameraRotation = cameraRotation * additionalRotation;
 
+            // Forward and backwards
             if(keys.IsKeyDown(Keys.W))
                 AddToCameraPosition(new Vector3(0, 0, -1));
             if (keys.IsKeyDown(Keys.S))
                 AddToCameraPosition(new Vector3(0, 0, 1));
+            // Strafing
+            if (keys.IsKeyDown(Keys.A))
+                AddToCameraPosition(new Vector3(-1, 0, 0));
+            if (keys.IsKeyDown(Keys.D))
+                AddToCameraPosition(new Vector3(1, 0, 0));
+            // Idle
             if(keys.IsKeyUp(Keys.W) && keys.IsKeyUp(Keys.S) )
                 AddToCameraPosition(new Vector3(0, 0, 0));
         }

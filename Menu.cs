@@ -303,10 +303,10 @@ namespace Stereo
         ///  This function draws every primitive on screen, takes 2 matrices, the current time, and does magic 
         ///  to render the boundingSpheres around every primitive
         /// </summary>
-        /// <param name="effect"></param>
-        /// <param name="viewMatrix"></param>
-        /// <param name="projectionMatrix"></param>
-        /// <param name="time"></param>
+        /// <param name="effect">The effect we're using to draw the primitives</param>
+        /// <param name="viewMatrix">The current view matrix as given by the camera</param>
+        /// <param name="projectionMatrix">The projection matrix from the camera</param>
+        /// <param name="time">The GameTime</param>
         void DrawPrimitives( BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
         {
 
@@ -518,8 +518,31 @@ namespace Stereo
 
             // Rotate them for t3h lulz
             primitives[inspectedPrim].Transformation.Rotate = new Vector3(yaw, pitch, roll) * 30.0f;
+
+            // We need to take the primitive from its position, and bring it in front of the camera, wherever that is
+            // so we compare each component and add or substract the prim's position accordingly
+
+            // First for the X position
+            if ((int)camera.cameraPosition.X < primitives[inspectedPrim].Transformation.Translate.X)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X - 0.25f, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
+            else if ((int)camera.cameraPosition.X > primitives[inspectedPrim].Transformation.Translate.X)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X + 0.25f, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
+
+            // Then the Y position
+            if ((int)camera.cameraPosition.Y < primitives[inspectedPrim].Transformation.Translate.Y)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y - 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
+            else if ((int)camera.cameraPosition.Y > primitives[inspectedPrim].Transformation.Translate.Y)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y + 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
+
+            //// Finally the Z position
+            //if ((int)camera.cameraPosition.Z < primitives[inspectedPrim].Transformation.Translate.Z)
+            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z - 0.25f);
+            //else if ((int)camera.cameraPosition.Z > primitives[inspectedPrim].Transformation.Translate.Z)
+            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z + 0.25f);
+
+
             // Offset each primitive by a factor
-            primitives[inspectedPrim].Transformation.Translate = new Vector3(0.0f, 0.0f, 0.0f);
+            //primitives[inspectedPrim].Transformation.Translate = new Vector3(0.0f, 0.0f, 0.0f);
             // Update the world matrix by this factor
             effect.World = primitives[inspectedPrim].Transformation.Matrix;
             // Draw the primitive

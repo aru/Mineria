@@ -52,7 +52,7 @@
     <Compile Include="Helper Classes\BoundingSphereRenderer.cs" />
     <Compile Include="Helper Classes\Cursor.cs" />
     <Compile Include="Helper Classes\Transformation.cs" />
-    <Compile Include="Input Control\Camera.cs" />
+    <Compile Include="Camera Control\Camera.cs" />
     <Compile Include="Primitives\BezierPrimitive.cs" />
     <Compile Include="Primitives\CubePrimitive.cs" />
     <Compile Include="Primitives\EllipticalCylinder.cs" />
@@ -67,7 +67,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Input Control\FreeCamera.cs" />
+    <Compile Include="Camera Control\FreeCamera.cs" />
     <Compile Include="Primitives\GeometricPrimitive.cs" />
     <Compile Include="WinForm Adapters\GraphicsDeviceControl.cs">
       <SubType>Component</SubType>
