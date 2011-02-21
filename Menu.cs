@@ -534,11 +534,11 @@ namespace Stereo
             else if ((int)camera.cameraPosition.Y > primitives[inspectedPrim].Transformation.Translate.Y)
                 primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y + 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
 
-            //// Finally the Z position
-            //if ((int)camera.cameraPosition.Z < primitives[inspectedPrim].Transformation.Translate.Z)
-            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z - 0.25f);
-            //else if ((int)camera.cameraPosition.Z > primitives[inspectedPrim].Transformation.Translate.Z)
-            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z + 0.25f);
+            // Finally the Z position
+            if ((int)camera.cameraPosition.Z + 10.0f < primitives[inspectedPrim].Transformation.Translate.Z)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z - 0.25f);
+            else if ((int)camera.cameraPosition.Z - 10.0f > primitives[inspectedPrim].Transformation.Translate.Z)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z + 0.25f);
 
 
             // Offset each primitive by a factor
