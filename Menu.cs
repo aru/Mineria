@@ -511,6 +511,15 @@ namespace Stereo
         void DrawInspectedPrimitive(BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
         {
 
+            // Check for user input, if the user presses a key
+
+            // Dispose of the primitive
+
+            // Remove it from the list
+
+            // Re add it with a new size value
+
+
             // Lulz done to get that weird spinning rotation
             float yaw = time * 0.7f;
             float pitch = time * 0.8f;
@@ -541,12 +550,18 @@ namespace Stereo
                 primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z + 0.25f);
 
 
-            // Offset each primitive by a factor
-            //primitives[inspectedPrim].Transformation.Translate = new Vector3(0.0f, 0.0f, 0.0f);
             // Update the world matrix by this factor
             effect.World = primitives[inspectedPrim].Transformation.Matrix;
             // Draw the primitive
             primitives[inspectedPrim].Draw(effect);
+
+            // Present the 2D graphics
+
+            // Present this primtive's formula
+
+            // Present the buttons that can affect this particular prim
+
+            // Reset states
 
         }
 
