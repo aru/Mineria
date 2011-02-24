@@ -190,6 +190,9 @@ namespace Stereo
             // Start the animation timer.
             stopWatch = Stopwatch.StartNew();
 
+            // Start the size modifier
+            size = 1.0f;
+
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
         }
@@ -258,13 +261,13 @@ namespace Stereo
             // If we are in inspection Mode
             if (inspectionMode)
             {
-                size = 1.0f;
                 // Focus on one primitive and draw it
                 DrawInspectedPrimitive( effect, camera.viewMatrix, camera.projectionMatrix, time );
             }
             else
             {
-                size = 0.0f;
+                // Reset the size modifier
+                size = 1.0f;
                 // Draw them prims
                 DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
             }
@@ -527,13 +530,13 @@ namespace Stereo
             if (keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.R))
             {
                 // Add to the size value
-                size += 1.0f;
+                size += 0.1f;
                 needsUpdate = true;
             }
             else if (keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F))
             {
                 // Add to the size value
-                size -= 0.25f;
+                size -= 0.1f;
                 if (size < 0.0f)
                     size = 0.0f;
                 needsUpdate = true;
@@ -574,10 +577,14 @@ namespace Stereo
                 primitives[inspectedPrim].Transformation.Translate = new Vector3(camera.cameraPosition.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
 
             // Then the Y position
-            if ((int)camera.cameraPosition.Y < primitives[inspectedPrim].Transformation.Translate.Y)
-                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y - 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
-            else if ((int)camera.cameraPosition.Y > primitives[inspectedPrim].Transformation.Translate.Y)
-                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y + 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
+            //if ((int)camera.cameraPosition.Y < primitives[inspectedPrim].Transformation.Translate.Y)
+            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y - 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
+            //else if ((int)camera.cameraPosition.Y > primitives[inspectedPrim].Transformation.Translate.Y)
+            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, primitives[inspectedPrim].Transformation.Translate.Y + 0.25f, primitives[inspectedPrim].Transformation.Translate.Z);
+
+            if (camera.cameraPosition.Y < primitives[inspectedPrim].Transformation.Translate.Y ||
+                 camera.cameraPosition.Y > primitives[inspectedPrim].Transformation.Translate.Y)
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X, camera.cameraPosition.Y, primitives[inspectedPrim].Transformation.Translate.Z);
 
             // Finally the Z position
             if ((int)camera.cameraPosition.Z + 10.0f < primitives[inspectedPrim].Transformation.Translate.Z)

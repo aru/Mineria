@@ -44,10 +44,6 @@ namespace Stereo
         // The world matrix for independently moving each primitive goes here
         Matrix world = Matrix.Identity;
         Matrix transform = Matrix.Identity;
-        float yawAngle = 0;
-        float pitchAngle = 0;
-        float rollAngle = 0;
-        Vector3 direction;
 
         // Helper class to help us move the object around the scene
         Transformation transformation;
