@@ -73,6 +73,9 @@ namespace Stereo
             position.X = vp.X + (vp.Width / 2);
             position.Y = vp.Y + (vp.Height / 2);
 
+            // make this component visible
+            this.Visible = true;
+
         }
 
         #endregion

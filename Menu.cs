@@ -47,7 +47,6 @@ namespace Stereo
         bool inspectionMode = false; // activate inspection Mode
         int inspectedPrim = 0; // selected Primitive to inspect
         MouseState prevMouseState, currMouseState;
-        KeyboardState keys;
 
         // to get the new sizes we use the following
         float size; // a float to set the new size
@@ -272,15 +271,16 @@ namespace Stereo
                 DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
             }
 
-            // Go through every DrawableComponent and Draw() them
-            //foreach (DrawableWinFormComponent drawable in Components)
-            //{
-            //    if( drawable.ToString() == "DrawableWinFormComponent" )
-            //        drawable.Draw(stopWatch);
-            //}
-            
-            // That clearly failed and there's no time to learn more C#, just call it
-            cursor.Draw(stopWatch); // draw the cursor
+            // Go through every DrawableComponent and Draw() them (if drawable)
+            for (int i = 0; i < Components.Count; i++)
+            {
+                WinFormComponent gc = (WinFormComponent)Components[i];
+                if ((gc is DrawableWinFormComponent) &&
+                    ((DrawableWinFormComponent)gc).Visible)
+                {
+                    ((DrawableWinFormComponent)gc).Draw(stopWatch);
+                }
+            }
 
             // if there is an intersection and the user has pressed the left mouse button
             // we need to go into inspection mode
@@ -521,6 +521,9 @@ namespace Stereo
         void DrawInspectedPrimitive(BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
         {
 
+            // Upcast our inspected primitive to use this info later
+            GeometricPrimitive gp = (GeometricPrimitive)primitives[inspectedPrim];
+
             // reset the update variable
             needsUpdate = false;
 
@@ -545,11 +548,32 @@ namespace Stereo
             // if we have changed the size of our primitive
             if (needsUpdate)
             {
+
                 // Dispose of the primitive
                 primitives[inspectedPrim].Dispose();
 
                 // Remove it from the list
                 primitives.RemoveAt(inspectedPrim);
+
+                // Find out what our primitive was is and set some variables
+                if (gp is SpherePrimitive)
+                {
+                }
+                if (gp is CubePrimitive)
+                {
+                }
+                if (gp is CylinderPrimitive)
+                {
+                }
+                if (gp is TorusPrimitive)
+                {
+                }
+                if (gp is HyperbollicCylinder)
+                {
+                }
+                if (gp is EllipticalCylinder)
+                {
+                }
 
                 // Re add it with a new size value
                 primitives.Insert(inspectedPrim, new SpherePrimitive(GraphicsDevice, size, 32));
