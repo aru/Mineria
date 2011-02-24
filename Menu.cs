@@ -47,6 +47,11 @@ namespace Stereo
         bool inspectionMode = false; // activate inspection Mode
         int inspectedPrim = 0; // selected Primitive to inspect
         MouseState prevMouseState, currMouseState;
+        KeyboardState keys;
+
+        // to get the new sizes we use the following
+        float size; // a float to set the new size
+        bool needsUpdate; // a bool to see if we need to add a new one
 
         // The names of each primitive, these will appear right above a pointed primitive
         static readonly string[] ModelFilenames = new string[]{
@@ -253,11 +258,13 @@ namespace Stereo
             // If we are in inspection Mode
             if (inspectionMode)
             {
+                size = 1.0f;
                 // Focus on one primitive and draw it
                 DrawInspectedPrimitive( effect, camera.viewMatrix, camera.projectionMatrix, time );
             }
             else
             {
+                size = 0.0f;
                 // Draw them prims
                 DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
             }
@@ -511,14 +518,39 @@ namespace Stereo
         void DrawInspectedPrimitive(BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
         {
 
+            // reset the update variable
+            needsUpdate = false;
+
             // Check for user input, if the user presses a key
+            KeyboardState keys = Keyboard.GetState();
 
-            // Dispose of the primitive
+            if (keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.R))
+            {
+                // Add to the size value
+                size += 1.0f;
+                needsUpdate = true;
+            }
+            else if (keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.F))
+            {
+                // Add to the size value
+                size -= 0.25f;
+                if (size < 0.0f)
+                    size = 0.0f;
+                needsUpdate = true;
+            }
 
-            // Remove it from the list
+            // if we have changed the size of our primitive
+            if (needsUpdate)
+            {
+                // Dispose of the primitive
+                primitives[inspectedPrim].Dispose();
 
-            // Re add it with a new size value
+                // Remove it from the list
+                primitives.RemoveAt(inspectedPrim);
 
+                // Re add it with a new size value
+                primitives.Insert(inspectedPrim, new SpherePrimitive(GraphicsDevice, size, 32));
+            }
 
             // Lulz done to get that weird spinning rotation
             float yaw = time * 0.7f;
@@ -532,10 +564,14 @@ namespace Stereo
             // so we compare each component and add or substract the prim's position accordingly
 
             // First for the X position
-            if ((int)camera.cameraPosition.X < primitives[inspectedPrim].Transformation.Translate.X)
-                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X - 0.25f, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
-            else if ((int)camera.cameraPosition.X > primitives[inspectedPrim].Transformation.Translate.X)
-                primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X + 0.25f, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
+            //if ((int)camera.cameraPosition.X < primitives[inspectedPrim].Transformation.Translate.X)
+            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X - 0.25f, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
+            //else if ((int)camera.cameraPosition.X > primitives[inspectedPrim].Transformation.Translate.X)
+            //    primitives[inspectedPrim].Transformation.Translate = new Vector3(primitives[inspectedPrim].Transformation.Translate.X + 0.25f, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
+
+            if ( camera.cameraPosition.X < primitives[inspectedPrim].Transformation.Translate.X ||
+                 camera.cameraPosition.X > primitives[inspectedPrim].Transformation.Translate.X )
+                primitives[inspectedPrim].Transformation.Translate = new Vector3(camera.cameraPosition.X, primitives[inspectedPrim].Transformation.Translate.Y, primitives[inspectedPrim].Transformation.Translate.Z);
 
             // Then the Y position
             if ((int)camera.cameraPosition.Y < primitives[inspectedPrim].Transformation.Translate.Y)
