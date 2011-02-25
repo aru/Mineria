@@ -51,6 +51,7 @@ namespace Stereo
         // to get the new sizes we use the following
         float size; // a float to set the new size
         bool needsUpdate; // a bool to see if we need to add a new one
+        GeometricPrimitive gp; // A geometric primitive to get the type of prim we're inspecting
 
         // The names of each primitive, these will appear right above a pointed primitive
         static readonly string[] ModelFilenames = new string[]{
@@ -438,6 +439,10 @@ namespace Stereo
                         {
                             inspectionMode = true;
                             inspectedPrim = i;
+
+                            // Upcast our inspected primitive to use this info later
+                            gp = (GeometricPrimitive)primitives[inspectedPrim];
+
                         }
                     }
 
@@ -521,9 +526,6 @@ namespace Stereo
         void DrawInspectedPrimitive(BasicEffect effect, Matrix viewMatrix, Matrix projectionMatrix, float time )
         {
 
-            // Upcast our inspected primitive to use this info later
-            GeometricPrimitive gp = (GeometricPrimitive)primitives[inspectedPrim];
-
             // reset the update variable
             needsUpdate = false;
 
@@ -555,28 +557,19 @@ namespace Stereo
                 // Remove it from the list
                 primitives.RemoveAt(inspectedPrim);
 
-                // Find out what our primitive was is and set some variables
+                // Find out what our primitive was is and re add it with a new size value
                 if (gp is SpherePrimitive)
-                {
-                }
-                if (gp is CubePrimitive)
-                {
-                }
-                if (gp is CylinderPrimitive)
-                {
-                }
-                if (gp is TorusPrimitive)
-                {
-                }
-                if (gp is HyperbollicCylinder)
-                {
-                }
-                if (gp is EllipticalCylinder)
-                {
-                }
-
-                // Re add it with a new size value
-                primitives.Insert(inspectedPrim, new SpherePrimitive(GraphicsDevice, size, 32));
+                    primitives.Insert(inspectedPrim, new SpherePrimitive(GraphicsDevice, size, 32));
+                else if (gp is CubePrimitive)
+                    primitives.Insert(inspectedPrim, new CubePrimitive(GraphicsDevice, size));
+                else if (gp is CylinderPrimitive)
+                    primitives.Insert(inspectedPrim, new CylinderPrimitive(GraphicsDevice, size, size, 32));
+                else if (gp is TorusPrimitive)
+                    primitives.Insert(inspectedPrim, new TorusPrimitive(GraphicsDevice, size, size, 32));
+                else if (gp is HyperbollicCylinder)
+                    primitives.Insert(inspectedPrim, new HyperbollicCylinder(GraphicsDevice, size, size, size, 32));
+                else if (gp is EllipticalCylinder)
+                    primitives.Insert(inspectedPrim, new EllipticalCylinder(GraphicsDevice, size, size, size, 32));
             }
 
             // Lulz done to get that weird spinning rotation
