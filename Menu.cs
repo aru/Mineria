@@ -270,6 +270,16 @@ namespace Stereo
                 size = 1.0f;
                 // Draw them prims
                 DrawPrimitives(effect, camera.viewMatrix, camera.projectionMatrix, time);
+
+                // Draw text here because we are too lazy to check what states are not reset and stuff
+                spriteBatch.Begin();
+
+                // Draw fonts
+                spriteBatch.DrawString(font, "Haz clic sobre alguna primitiva",
+                    new Vector2(10, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
+
+                spriteBatch.End();
             }
 
             // Go through every DrawableComponent and Draw() them (if drawable)
