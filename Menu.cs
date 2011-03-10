@@ -628,6 +628,42 @@ namespace Stereo
             // Present the 2D graphics
 
             // Present this primtive's formula
+            // Draw text here because we are too lazy to check what states are not reset and stuff
+            spriteBatch.Begin();
+
+            // Draw fonts
+            if (gp is SpherePrimitive)
+            {
+                // draw text example
+                spriteBatch.DrawString(font, "Esfera",
+                    new Vector2(10, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
+            }
+            else if (gp is CubePrimitive)
+            {
+                // draw text example
+            }
+            else if (gp is CylinderPrimitive)
+            {
+                // draw text example
+            }
+            else if (gp is TorusPrimitive)
+            {
+                // draw text here
+            }
+            else if (gp is HyperbollicCylinder)
+            {
+                // draw text example
+            }
+            else if (gp is EllipticalCylinder)
+            {
+                // draw text example
+                spriteBatch.DrawString(font, "Cilindro eliptico",
+                    new Vector2(10, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
+            }
+
+            spriteBatch.End();
 
             // Present the buttons that can affect this particular prim
 
