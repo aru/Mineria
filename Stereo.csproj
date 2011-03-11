@@ -49,6 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StereoCopy.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper Classes\BoundingSphereRenderer.cs" />
     <Compile Include="Helper Classes\Cursor.cs" />
     <Compile Include="Helper Classes\Transformation.cs" />
@@ -73,7 +82,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WinForm Adapters\GraphicsDeviceService.cs" />
-    <Compile Include="Menu.cs">
+    <Compile Include="StereoControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WinForm Adapters\NativeMethods.cs" />
@@ -87,6 +96,9 @@
     <Compile Include="WinForm Adapters\WinFormComponent.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

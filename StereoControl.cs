@@ -31,6 +31,7 @@ namespace Stereo
         Rectangle mainFrame;
         SpriteBatch spriteBatch;
         SpriteFont font;
+        Form2 stereoCopy;
 
         // Collection for game components
         GameComponentCollection Components;
@@ -69,6 +70,7 @@ namespace Stereo
 
         // Stereoscopy hell yeah
         RenderTarget2D renderTarget;
+        Texture2D resolvedTexture;
 
         #endregion
 
@@ -200,6 +202,10 @@ namespace Stereo
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
             renderTarget = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, GraphicsDevice.DisplayMode.Format, pp.DepthStencilFormat );
 
+            // J00 LET'S PUT OUR NEW WINFORM HERE CUZ WAI NOT
+            stereoCopy = new Form2();
+            stereoCopy.Show();
+
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
         }
@@ -326,12 +332,15 @@ namespace Stereo
 
             // end of stereo rendering stuff
             GraphicsDevice.SetRenderTarget( null );
-            Texture2D resolvedTexture = renderTarget;
+            resolvedTexture = renderTarget;
 
             // Draw it!
             spriteBatch.Begin();
             spriteBatch.Draw(resolvedTexture, Vector2.Zero, Color.White);
             spriteBatch.End();
+
+            // do it for form2
+            stereoCopy.stereoCopy1.backgroundTexture = resolvedTexture;
         }
         #endregion
 
