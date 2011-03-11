@@ -276,7 +276,7 @@ namespace Stereo
 
                 // Draw fonts
                 spriteBatch.DrawString(font, "Haz clic sobre alguna primitiva",
-                    new Vector2(10, 10), Color.White, 0, Vector2.Zero,
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
 
                 spriteBatch.End();
@@ -638,6 +638,9 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Esfera",
                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 27 , 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
+                spriteBatch.DrawString(font, "x^2 + y^2 + z^2 = r^2",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 105, 50), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is CubePrimitive)
             {
@@ -652,6 +655,9 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Cilindro",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 36, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
+                spriteBatch.DrawString(font, "x^2 + y^2 = r^2",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 75, 50), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is TorusPrimitive)
             {
@@ -659,19 +665,28 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Toroide",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 36, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
+                spriteBatch.DrawString(font, "[c-sqrt(x^2+y^2)]^2 + z^2 = a^2",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, 50), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is HyperbollicCylinder)
             {
                 // draw text example
                 spriteBatch.DrawString(font, "Cilindro hiperbolico",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 90, 10), Color.White, 0, Vector2.Zero,
-                    1, SpriteEffects.None, 1);
+                    1, SpriteEffects.None, 1); 
+                spriteBatch.DrawString(font, "(x^2/a^2) - (y^2/b^2) = 1",
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 125, 50), Color.White, 0, Vector2.Zero,
+                     1, SpriteEffects.None, 1);
             }
             else if (gp is EllipticalCylinder)
             {
                 // draw text example
                 spriteBatch.DrawString(font, "Cilindro eliptico",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 78, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
+                spriteBatch.DrawString(font, "(x^2/a^2) + (y^2/b^2) = 1",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 125, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
             }
 
