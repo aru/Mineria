@@ -44,7 +44,7 @@ namespace Stereo
 
         // Some cool stuff
         RasterizerState wireFrame; // to draw wireFrames
-        bool drawBoundingSphere = true; // expose the boundingSpheres
+        bool drawBoundingSphere = false; // expose the boundingSpheres
         bool inspectionMode = false; // activate inspection Mode
         int inspectedPrim = 0; // selected Primitive to inspect
         MouseState prevMouseState, currMouseState;
@@ -145,7 +145,7 @@ namespace Stereo
             // BackBuffer size and stuff
             GraphicsDevice.PresentationParameters.BackBufferHeight = 480;
             GraphicsDevice.PresentationParameters.BackBufferWidth = 640;
-            GraphicsDevice.RasterizerState = wireFrame; // Optional, here for debugging purposes and stuff
+            //GraphicsDevice.RasterizerState = wireFrame; // Optional, here for debugging purposes and stuff
 
             // Create our BasicEffect.
             effect = new BasicEffect(GraphicsDevice);
@@ -238,7 +238,7 @@ namespace Stereo
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             //Depending on the 3D content
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-            GraphicsDevice.RasterizerState = wireFrame;
+            GraphicsDevice.RasterizerState = wireFrame; // optional turn on if you want
 
             // Spin the primitives according to how much time has passed.
             float time = (float)stopWatch.Elapsed.TotalSeconds;
