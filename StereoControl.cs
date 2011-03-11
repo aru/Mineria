@@ -668,6 +668,9 @@ namespace Stereo
                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 110, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
                 needsUpdate = true;
+                spriteBatch.DrawString(font, "Haz click derecho para regresar",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, (GraphicsDevice.Viewport.Height - 35)),
+                       Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
             else if (gp is CubePrimitive)
             {
@@ -675,6 +678,9 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Cubo",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 18, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
+                spriteBatch.DrawString(font, "Haz click derecho para regresar",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, (GraphicsDevice.Viewport.Height - 35)),
+                       Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
             else if (gp is CylinderPrimitive)
             {
@@ -686,6 +692,9 @@ namespace Stereo
                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 80, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
                 needsUpdate = true;
+                spriteBatch.DrawString(font, "Haz click derecho para regresar",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, (GraphicsDevice.Viewport.Height - 35)),
+                       Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
             else if (gp is TorusPrimitive)
             {
@@ -696,6 +705,10 @@ namespace Stereo
                 spriteBatch.DrawString(font, "[c-sqrt(x^2+y^2)]^2 + z^2 = " + (size / 2) + "^2",
                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 160, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
+                needsUpdate = true;
+                spriteBatch.DrawString(font, "Haz click derecho para regresar",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, (GraphicsDevice.Viewport.Height - 35)),
+                       Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
             else if (gp is HyperbollicCylinder)
             {
@@ -703,10 +716,13 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Cilindro hiperbolico",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 90, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1); 
-                spriteBatch.DrawString(font, "(x^2/"+ size +"^2) - (y^2/"+ (size/2)+"^2) = 1",
-                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 135, 50), Color.White, 0, Vector2.Zero,
+                spriteBatch.DrawString(font, "(x^2 / "+ (size*2) +"^2) - (y^2 / "+ size +"^2) = 1",
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 145, 50), Color.White, 0, Vector2.Zero,
                      1, SpriteEffects.None, 1);
                 needsUpdate = true;
+                spriteBatch.DrawString(font, "Haz click derecho para regresar",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, (GraphicsDevice.Viewport.Height - 35)),
+                       Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
             else if (gp is EllipticalCylinder)
             {
@@ -714,10 +730,13 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Cilindro eliptico",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 78, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
-                spriteBatch.DrawString(font, "(x^2/" + size + "^2) + (y^2/" + (size / 2) + "^2) = 1",
-                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 135, 50), Color.White, 0, Vector2.Zero,
+                spriteBatch.DrawString(font, "(x^2 / " + (size*2) + "^2) + (y^2 / " + size + "^2) = 1",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 145, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
                 needsUpdate = true;
+                spriteBatch.DrawString(font, "Haz click derecho para regresar",
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 155, (GraphicsDevice.Viewport.Height - 35)),
+                       Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             }
 
             spriteBatch.End();
@@ -732,3 +751,4 @@ namespace Stereo
         #endregion
     }
 }
+ 
