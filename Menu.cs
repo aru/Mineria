@@ -636,30 +636,42 @@ namespace Stereo
             {
                 // draw text example
                 spriteBatch.DrawString(font, "Esfera",
-                    new Vector2(10, 10), Color.White, 0, Vector2.Zero,
+                   new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 27 , 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
             }
             else if (gp is CubePrimitive)
             {
                 // draw text example
+                spriteBatch.DrawString(font, "Cubo",
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 18, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is CylinderPrimitive)
             {
                 // draw text example
+                spriteBatch.DrawString(font, "Cilindro",
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 36, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is TorusPrimitive)
             {
                 // draw text here
+                spriteBatch.DrawString(font, "Toroide",
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 36, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is HyperbollicCylinder)
             {
                 // draw text example
+                spriteBatch.DrawString(font, "Cilindro hiperbolico",
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 90, 10), Color.White, 0, Vector2.Zero,
+                    1, SpriteEffects.None, 1);
             }
             else if (gp is EllipticalCylinder)
             {
                 // draw text example
                 spriteBatch.DrawString(font, "Cilindro eliptico",
-                    new Vector2(10, 10), Color.White, 0, Vector2.Zero,
+                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 78, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
             }
 
