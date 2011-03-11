@@ -67,6 +67,9 @@ namespace Stereo
         // is moved with the left thumbstick. On windows, the mouse can be used as well.
         Cursor cursor;
 
+        // Stereoscopy hell yeah
+        RenderTarget2D renderTarget;
+
         #endregion
 
         #region Timestep Fixing
@@ -193,6 +196,10 @@ namespace Stereo
             // Start the size modifier
             size = 1.0f;
 
+            // Get us some stereoscopy going pl0x
+            PresentationParameters pp = GraphicsDevice.PresentationParameters;
+            renderTarget = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, GraphicsDevice.DisplayMode.Format, pp.DepthStencilFormat );
+
             // Hook the idle event to constantly redraw our animation.
             Application.Idle += TickWhileIdle;
         }
@@ -204,6 +211,8 @@ namespace Stereo
         /// </summary>
         protected override void Draw()
         {
+            // stereo here we go baby
+            GraphicsDevice.SetRenderTarget( renderTarget );
 
             // Clear the Graphics Device to render the scene
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -315,6 +324,14 @@ namespace Stereo
                 component.Update(stopWatch);
             }
 
+            // end of stereo rendering stuff
+            GraphicsDevice.SetRenderTarget( null );
+            Texture2D resolvedTexture = renderTarget;
+
+            // Draw it!
+            spriteBatch.Begin();
+            spriteBatch.Draw(resolvedTexture, Vector2.Zero, Color.White);
+            spriteBatch.End();
         }
         #endregion
 
@@ -579,7 +596,7 @@ namespace Stereo
                 else if (gp is HyperbollicCylinder)
                     primitives.Insert(inspectedPrim, new HyperbollicCylinder(GraphicsDevice, size, size, size, 32));
                 else if (gp is EllipticalCylinder)
-                    primitives.Insert(inspectedPrim, new EllipticalCylinder(GraphicsDevice, size, size, size, 32));
+                    primitives.Insert(inspectedPrim, new EllipticalCylinder(GraphicsDevice, size, size * 2, size, 32));
             }
 
             // Lulz done to get that weird spinning rotation
@@ -678,9 +695,10 @@ namespace Stereo
             spriteBatch.End();
 
             // Present the buttons that can affect this particular prim
+            // yawn, meibi later?
 
             // Reset states
-
+            // actually, don't, cause they are already being reset up there, so yeah
         }
 
         #endregion
