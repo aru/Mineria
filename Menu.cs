@@ -677,7 +677,7 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Cilindro hiperbolico",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 90, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1); 
-                spriteBatch.DrawString(font, "(x^2/"+ size +"^2) - (y^2/"+ (size/2)+"^2) = 1",
+                spriteBatch.DrawString(font, "(x^2/"+ (size*2) +"^2) - (y^2/"+ size +"^2) = 1",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 135, 50), Color.White, 0, Vector2.Zero,
                      1, SpriteEffects.None, 1);
                 needsUpdate = true;
@@ -688,7 +688,7 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Cilindro eliptico",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 78, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
-                spriteBatch.DrawString(font, "(x^2/" + size + "^2) + (y^2/" + (size / 2) + "^2) = 1",
+                spriteBatch.DrawString(font, "(x^2/" + (size*2) + "^2) + (y^2/" + size + "^2) = 1",
                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 135, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
                 needsUpdate = true;
