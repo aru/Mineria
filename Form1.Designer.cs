@@ -51,6 +51,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.TopMost = true;
+            this.SizeChanged += new System.EventHandler(Form1_SizeChanged);
             this.ResumeLayout(false);
 
         }

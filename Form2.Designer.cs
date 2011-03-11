@@ -53,6 +53,7 @@ namespace Stereo
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form2";
             this.TopMost = true;
+            this.SizeChanged += new System.EventHandler(Form2_SizeChanged);
             this.ResumeLayout(false);
 
         }

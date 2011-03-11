@@ -123,6 +123,10 @@ namespace Stereo
         protected override void Draw()
         {
 
+            // has the window resized?
+            mainFrame.Width = GraphicsDevice.Viewport.Width;
+            mainFrame.Height = GraphicsDevice.Viewport.Height;
+
             // Clear the Graphics Device to render the scene
             GraphicsDevice.Clear(Color.CornflowerBlue);
 

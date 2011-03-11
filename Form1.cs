@@ -15,5 +15,10 @@ namespace Stereo
         {
             InitializeComponent();
         }
+
+        private void Form1_SizeChanged(object sender, System.EventArgs e)
+        {
+            this.FormBorderStyle = FormBorderStyle.None;
+        }
     }
 }

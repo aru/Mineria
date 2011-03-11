@@ -51,6 +51,7 @@ namespace Stereo
 
         // to get the new sizes we use the following
         float size; // a float to set the new size
+        float size2; // a float to set other sizes
         bool needsUpdate; // a bool to see if we need to add a new one
         GeometricPrimitive gp; // A geometric primitive to get the type of prim we're inspecting
 
@@ -197,6 +198,7 @@ namespace Stereo
 
             // Start the size modifier
             size = 1.0f;
+            size2 = 1.0f;
 
             // Get us some stereoscopy going pl0x
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
@@ -217,6 +219,13 @@ namespace Stereo
         /// </summary>
         protected override void Draw()
         {
+            // Get us some stereoscopy going pl0x
+            PresentationParameters pp = GraphicsDevice.PresentationParameters;
+            renderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, GraphicsDevice.DisplayMode.Format, pp.DepthStencilFormat);
+            // lazy hack to expand bg texture
+            mainFrame.Width = GraphicsDevice.Viewport.Width;
+            mainFrame.Height = GraphicsDevice.Viewport.Height;
+
             // stereo here we go baby
             GraphicsDevice.SetRenderTarget( renderTarget );
 
@@ -582,6 +591,20 @@ namespace Stereo
                     size = 0.0f;
                 needsUpdate = true;
             }
+            else if (keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.T))
+            {
+                // Add to the size value
+                size2 += 0.1f;
+                needsUpdate = true;
+            }
+            else if (keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.G))
+            {
+                // Add to the size value
+                size2 -= 0.1f;
+                if (size < 0.0f)
+                    size = 0.0f;
+                needsUpdate = true;
+            }
 
             // if we have changed the size of our primitive
             if (needsUpdate)
@@ -595,17 +618,17 @@ namespace Stereo
 
                 // Find out what our primitive was is and re add it with a new size value
                 if (gp is SpherePrimitive)
-                    primitives.Insert(inspectedPrim, new SpherePrimitive(GraphicsDevice, size, 32));
+                    primitives.Insert(inspectedPrim, new SpherePrimitive(GraphicsDevice, size, 12));
                 else if (gp is CubePrimitive)
                     primitives.Insert(inspectedPrim, new CubePrimitive(GraphicsDevice, size));
                 else if (gp is CylinderPrimitive)
-                    primitives.Insert(inspectedPrim, new CylinderPrimitive(GraphicsDevice, size, size, 32));
+                    primitives.Insert(inspectedPrim, new CylinderPrimitive(GraphicsDevice, size, size, 16));
                 else if (gp is TorusPrimitive)
-                    primitives.Insert(inspectedPrim, new TorusPrimitive(GraphicsDevice, size, size, 32));
+                    primitives.Insert(inspectedPrim, new TorusPrimitive(GraphicsDevice, size, size2, 16));
                 else if (gp is HyperbollicCylinder)
-                    primitives.Insert(inspectedPrim, new HyperbollicCylinder(GraphicsDevice, size, size, size, 32));
+                    primitives.Insert(inspectedPrim, new HyperbollicCylinder(GraphicsDevice, size, size, size, 16));
                 else if (gp is EllipticalCylinder)
-                    primitives.Insert(inspectedPrim, new EllipticalCylinder(GraphicsDevice, size, size * 2, size, 32));
+                    primitives.Insert(inspectedPrim, new EllipticalCylinder(GraphicsDevice, size, size * 2, size, 16));
             }
 
             // Lulz done to get that weird spinning rotation
@@ -702,7 +725,7 @@ namespace Stereo
                 spriteBatch.DrawString(font, "Toroide",
                     new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 36, 10), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
-                spriteBatch.DrawString(font, "[c-sqrt(x^2+y^2)]^2 + z^2 = " + (size / 2) + "^2",
+                spriteBatch.DrawString(font, "["+(size - size2/2)+"-sqrt(x^2+y^2)]^2 + z^2 = " + (size2 / 2) + "^2",
                    new Vector2(((GraphicsDevice.Viewport.Width) / 2) - 160, 50), Color.White, 0, Vector2.Zero,
                     1, SpriteEffects.None, 1);
                 needsUpdate = true;
