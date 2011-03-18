@@ -14,7 +14,7 @@ namespace Stereo
     public partial class Form2 : Form
     {
         public StereoCopy stereoCopy1 { get; protected set; }
-
+        
         public Form2()
         {
             InitializeComponent();
